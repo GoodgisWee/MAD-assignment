@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
+
 public class SQLiteAdapter {
 
     //constant variable
@@ -15,7 +17,7 @@ public class SQLiteAdapter {
     public static final String BOOKING_TABLE = "BOOKING_TABLE";
     public static final String BUS_TABLE = "BUS_TABLE";
     public static final String SCHEDULE_TABLE = "SCHEDULE_TABLE";
-    public static final int MYDATABASE_VERSION = 1;
+    public static final int MYDATABASE_VERSION = 3;
 
     //User table content
     public static final String USER_NAME = "userName";
@@ -45,7 +47,7 @@ public class SQLiteAdapter {
 //-----------------------------------------------------------------------------
     //SQL command to create all table
     private static final String SCRIPT_CREATE_USER_TABLE =
-            "create table " + USER_TABLE
+            "create table if not exists " + USER_TABLE
                     + " (userID INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + USER_NAME + " text not null, "
                     + USER_EMAIL + " text not null, "
@@ -54,7 +56,7 @@ public class SQLiteAdapter {
                     + USER_CATEGORY + " text not null);";
 
     private static final String SCRIPT_CREATE_BUS_TABLE =
-            "create table " + BUS_TABLE
+            "create table if not exists " + BUS_TABLE
                     + " (busID INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + BUS_PLATE_NO + " text not null, "
                     + BUS_CURRENT_STOP + " text not null, "
@@ -63,7 +65,7 @@ public class SQLiteAdapter {
                     + BUS_ENDING_PLACE + " text not null);";
 
     private static final String SCRIPT_CREATE_SCHEDULE_TABLE =
-            "create table " + SCHEDULE_TABLE
+            "create table if not exists " + SCHEDULE_TABLE
                     + " (scheduleID INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + SCHEDULE_TIME_STARTING + " text not null, "
                     + SCHEDULE_TIME_ENDING + " text not null, "
@@ -73,15 +75,15 @@ public class SQLiteAdapter {
                     + "FOREIGN KEY (busID) REFERENCES " + BUS_TABLE + "(busID));";
 
     private static final String SCRIPT_CREATE_BOOKING_TABLE =
-            "create table " + BOOKING_TABLE
+            "create table if not exists " + BOOKING_TABLE
                     + " (bookingID INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + BOOKING_DATE + " text not null, "
                     + BOOKING_PICKUP + " text not null, "
                     + BOOKING_DROPOFF + " text not null, "
                     + "userID INTEGER NOT NULL, "
-                    + "busID INTEGER NOT NULL, "
+                    + "scheduleID INTEGER NOT NULL, "
                     + "FOREIGN KEY (userID) REFERENCES " + USER_TABLE + "(userID), "
-                    + "FOREIGN KEY (busID) REFERENCES " + BUS_TABLE + "(busID));";
+                    + "FOREIGN KEY (scheduleID) REFERENCES " + SCHEDULE_TABLE + "(scheduleID));";
 
 //-----------------------------------------------------------------------------
     //variables for db creation
@@ -163,21 +165,21 @@ public class SQLiteAdapter {
         contentValues.put(BOOKING_PICKUP, content2);
         contentValues.put(BOOKING_DROPOFF, content3);
         contentValues.put("userID", content4);
-        contentValues.put("busID", content5);
+        contentValues.put("scheduleID", content5);
 
         return sqLiteDatabase.insert(BOOKING_TABLE, null, contentValues);
     }
 
 //------------------------------------------------------------------------------------------------
     //READ DATA
-    public String readUser()
+    public ArrayList<String[]> readUser()
     {
         String [] columns = new String[] {USER_NAME, USER_EMAIL, USER_PASSWORD, USER_POINT, USER_CATEGORY}; 
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(USER_TABLE, columns,
                 null, null, null, null, null) ;
 
-        String result = "";
+        ArrayList<String[]> resultList = new ArrayList<>();
 
         int index_CONTENT_1 = cursor.getColumnIndex(USER_NAME);
         int index_CONTENT_2 = cursor.getColumnIndex(USER_EMAIL);
@@ -188,24 +190,26 @@ public class SQLiteAdapter {
         //it will read all the data until finish
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
         {
-            result = result + cursor.getString(index_CONTENT_1) +";"
-                    + cursor.getString(index_CONTENT_2) + ";"
-                    + cursor.getString(index_CONTENT_3) + ";"
-                    + cursor.getString(index_CONTENT_4) + ";"
-                    + cursor.getString(index_CONTENT_5) + "\n";
+            String[] resultArray = new String[5];
+            resultArray[0]=cursor.getString(index_CONTENT_1);
+            resultArray[1]=cursor.getString(index_CONTENT_2);
+            resultArray[2]=cursor.getString(index_CONTENT_3);
+            resultArray[3]=cursor.getString(index_CONTENT_4);
+            resultArray[4]=cursor.getString(index_CONTENT_5);
+            resultList.add(resultArray);
         }
 
-        return result;
+        return resultList;
     }
 
-    public String readBus()
+    public ArrayList<String[]> readBus()
     {
-        String [] columns = new String[] {BUS_PLATE_NO, BUS_CURRENT_STOP, BUS_CURRENT_STOP_TIME, BUS_STARTING_PLACE, BUS_ENDING_PLACE}; 
+        String [] columns = new String[] {BUS_PLATE_NO, BUS_CURRENT_STOP, BUS_CURRENT_STOP_TIME, BUS_STARTING_PLACE, BUS_ENDING_PLACE};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(BUS_TABLE, columns,
                 null, null, null, null, null) ;
 
-        String result = "";
+        ArrayList<String[]> resultList = new ArrayList<>();
 
         int index_CONTENT_1 = cursor.getColumnIndex(BUS_PLATE_NO);
         int index_CONTENT_2 = cursor.getColumnIndex(BUS_CURRENT_STOP);
@@ -216,24 +220,26 @@ public class SQLiteAdapter {
         //it will read all the data until finish
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
         {
-            result = result + cursor.getString(index_CONTENT_1) +";"
-                    + cursor.getString(index_CONTENT_2) + ";"
-                    + cursor.getString(index_CONTENT_3) + ";"
-                    + cursor.getString(index_CONTENT_4) + ";"
-                    + cursor.getString(index_CONTENT_5) + "\n";
+            String[] resultArray = new String[5];
+            resultArray[0]=cursor.getString(index_CONTENT_1);
+            resultArray[1]=cursor.getString(index_CONTENT_2);
+            resultArray[2]=cursor.getString(index_CONTENT_3);
+            resultArray[3]=cursor.getString(index_CONTENT_4);
+            resultArray[4]=cursor.getString(index_CONTENT_5);
+            resultList.add(resultArray);
         }
 
-        return result;
+        return resultList;
     }
 
-    public String readSchedule()
+    public ArrayList<String[]> readSchedule()
     {
         String [] columns = new String[] {SCHEDULE_TIME_STARTING, SCHEDULE_TIME_ENDING, SCHEDULE_TIME_BACKENDING, SCHEDULE_SEAT_AVAILABLE, "busID"};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(SCHEDULE_TABLE, columns,
                 null, null, null, null, null) ;
 
-        String result = "";
+        ArrayList<String[]> resultList = new ArrayList<>();
 
         int index_CONTENT_1 = cursor.getColumnIndex(SCHEDULE_TIME_STARTING);
         int index_CONTENT_2 = cursor.getColumnIndex(SCHEDULE_TIME_ENDING);
@@ -244,42 +250,45 @@ public class SQLiteAdapter {
         //it will read all the data until finish
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
         {
-            result = result + cursor.getString(index_CONTENT_1) +";"
-                    + cursor.getString(index_CONTENT_2) + ";"
-                    + cursor.getString(index_CONTENT_3) + ";"
-                    + cursor.getString(index_CONTENT_4) + ";"
-                    + cursor.getString(index_CONTENT_5) + "\n";
+            String[] resultArray = new String[5];
+            resultArray[0]=cursor.getString(index_CONTENT_1);
+            resultArray[1]=cursor.getString(index_CONTENT_2);
+            resultArray[2]=cursor.getString(index_CONTENT_3);
+            resultArray[3]=cursor.getString(index_CONTENT_4);
+            resultArray[4]=cursor.getString(index_CONTENT_5);
+            resultList.add(resultArray);
         }
-
-        return result;
+        return resultList;
     }
 
-    public String readBooking()
+    public ArrayList<String[]> readBooking()
     {
-        String [] columns = new String[] {BOOKING_DATE, BOOKING_PICKUP, BOOKING_DROPOFF, "userID", "busID"};
+        String [] columns = new String[] {BOOKING_DATE, BOOKING_PICKUP, BOOKING_DROPOFF, "userID", "scheduleID"};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(BOOKING_TABLE, columns,
                 null, null, null, null, null) ;
 
-        String result = "";
+        ArrayList<String[]> resultList = new ArrayList<>();
 
         int index_CONTENT_1 = cursor.getColumnIndex(BOOKING_DATE);
         int index_CONTENT_2 = cursor.getColumnIndex(BOOKING_PICKUP);
         int index_CONTENT_3 = cursor.getColumnIndex(BOOKING_DROPOFF);
         int index_CONTENT_4 = cursor.getColumnIndex("userID");
-        int index_CONTENT_5 = cursor.getColumnIndex("busID");
+        int index_CONTENT_5 = cursor.getColumnIndex("scheduleID");
 
         //it will read all the data until finish
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
         {
-            result = result + cursor.getString(index_CONTENT_1) +";"
-                    + cursor.getString(index_CONTENT_2) + ";"
-                    + cursor.getString(index_CONTENT_3) + ";"
-                    + cursor.getString(index_CONTENT_4) + ";"
-                    + cursor.getString(index_CONTENT_5) + "\n";
+            String[] resultArray = new String[5];
+            resultArray[0]=cursor.getString(index_CONTENT_1);
+            resultArray[1]=cursor.getString(index_CONTENT_2);
+            resultArray[2]=cursor.getString(index_CONTENT_3);
+            resultArray[3]=cursor.getString(index_CONTENT_4);
+            resultArray[4]=cursor.getString(index_CONTENT_5);
+            resultList.add(resultArray);
         }
 
-        return result;
+        return resultList;
     }
 
 //------------------------------------------------------------------------------------------------
@@ -342,7 +351,7 @@ public class SQLiteAdapter {
             values.put(BOOKING_PICKUP, "DummyPickup");
             values.put(BOOKING_DROPOFF, "DummyDropoff");
             values.put("userID", 10000);
-            values.put("busID", 1000);
+            values.put("scheduleID", 0);
             db.insert(BOOKING_TABLE, null, values);
             values.clear();
         }
@@ -350,9 +359,50 @@ public class SQLiteAdapter {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL(SCRIPT_CREATE_USER_TABLE);
-            db.execSQL(SCRIPT_CREATE_BOOKING_TABLE);
             db.execSQL(SCRIPT_CREATE_BUS_TABLE);
             db.execSQL(SCRIPT_CREATE_SCHEDULE_TABLE);
+            db.execSQL(SCRIPT_CREATE_BOOKING_TABLE);
+
+            if (oldVersion < 3) {
+                // If upgrading from version 1 to 2, execute the updated SCRIPT_CREATE_DATABASE
+                db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE); 
+                db.execSQL("DROP TABLE IF EXISTS " + BUS_TABLE); 
+                db.execSQL("DROP TABLE IF EXISTS " + SCHEDULE_TABLE); 
+                db.execSQL("DROP TABLE IF EXISTS " + BOOKING_TABLE); 
+                db.execSQL(SCRIPT_CREATE_USER_TABLE);
+                db.execSQL(SCRIPT_CREATE_BUS_TABLE);
+                db.execSQL(SCRIPT_CREATE_SCHEDULE_TABLE);
+                db.execSQL(SCRIPT_CREATE_BOOKING_TABLE);
+
+                //make all table PK starting from desired value
+                ContentValues values = new ContentValues();
+                values.put("userID", 10000);
+                values.put(USER_NAME, "DummyUser");
+                values.put(USER_EMAIL, "dummy@gmail.com");
+                values.put(USER_PASSWORD, "DummyUser");
+                values.put(USER_POINT, 100);
+                values.put(USER_CATEGORY, "student");
+                db.insert(USER_TABLE, null, values);
+                values.clear();
+
+                values.put("busID", 1000);
+                values.put(BUS_PLATE_NO, "DummyCarPlate");
+                values.put(BUS_CURRENT_STOP, "DummyStop");
+                values.put(BUS_CURRENT_STOP_TIME, "12:12:12");
+                values.put(BUS_STARTING_PLACE, "DummyStartingPlace");
+                values.put(BUS_ENDING_PLACE, "DummyEndingPlace");
+                db.insert(BUS_TABLE, null, values);
+                values.clear();
+
+                values.put("bookingID", 100);
+                values.put(BOOKING_DATE, "1212-12-12");
+                values.put(BOOKING_PICKUP, "DummyPickup");
+                values.put(BOOKING_DROPOFF, "DummyDropoff");
+                values.put("userID", 10000);
+                values.put("scheduleID", 0);
+                db.insert(BOOKING_TABLE, null, values);
+                values.clear();
+            }
         }
     }
 }

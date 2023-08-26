@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BookingPage">
+
+    <LinearLayout
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:text="Home"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_gravity="center" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <Spinner
+                android:id="@+id/pickUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding ="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/dropOff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding ="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/editTextDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:ems="10"
+                android:inputType="date"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+
+            <ImageButton
+                android:id="@+id/searchBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/ic_baseline_search_24" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#FFEE99"
+            android:layout_alignParentBottom="true">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:background="#FFDD77">
+
+                <TextView
+                    android:id="@+id/homeBtnDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="Home"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/homeBtn"
+                    android:layout_width="120dp"
+                    android:layout_height="48dp"
+                    android:layout_below="@id/homeBtnDesc"
+                    android:layout_centerHorizontal="true"
+                    android:background="#FFDD77"
+                    app:srcCompat="@drawable/ic_baseline_home_24" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/bookingBtnDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="Booking"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/bookingBtn"
+                    android:layout_width="120dp"
+                    android:layout_height="48dp"
+                    android:layout_below="@id/bookingBtnDesc"
+                    android:layout_centerHorizontal="true"
+                    android:background="#FFEE99"
+                    app:srcCompat="@drawable/ic_baseline_library_books_24" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/profileBtnDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="Profile"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/profileBtn"
+                    android:layout_width="120dp"
+                    android:layout_height="48dp"
+                    android:layout_below="@id/profileBtnDesc"
+                    android:layout_centerHorizontal="true"
+                    android:background="#FFEE99"
+                    app:srcCompat="@drawable/ic_baseline_face_24" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
