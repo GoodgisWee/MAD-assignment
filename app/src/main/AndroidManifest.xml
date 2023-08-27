@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WheelIO" >
         <activity
-            android:name=".MainActivity"
+            android:name=".BookingPage"
             android:exported="false" />
         <activity
-            android:name=".BookingPage"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/title_activity_booking_page" >
             <intent-filter>

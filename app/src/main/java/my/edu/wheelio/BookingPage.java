@@ -24,10 +24,11 @@ public class BookingPage extends AppCompatActivity {
 
     private Spinner pickupSpinner, dropoffSpinner;
     private String pickUpPoint, dropOffPoint;
-    private ArrayList<String[]> scheduleList;
+    private ArrayList<String[]> scheduleList, busList;
     private ImageButton searchBtn;
     private SQLiteAdapter mySQLiteAdapter;
-    private TableLayout tableLayout1, tableLayout2, tableLayout3;
+    private TableLayout tableLayout1, tableLayout2;
+    private TableRow headerTableLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,24 +91,71 @@ public class BookingPage extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mySQLiteAdapter.openToRead();
-                scheduleList = mySQLiteAdapter.readSchedule();
+                setContentView(R.layout.booking_schedule);
                 showSchedule();
             }
         });
     }
+    //function to show all schedule
     private void showSchedule(){
+        //read data from db
+        mySQLiteAdapter.openToRead();
+        scheduleList = mySQLiteAdapter.readSchedule();
+        busList = mySQLiteAdapter.readBus();
+
         tableLayout1 = findViewById(R.id.tableLayout1);
         tableLayout2 = findViewById(R.id.tableLayout2);
-        tableLayout3 = findViewById(R.id.tableLayout3);
-        String[] busArray = {"1001","1002"};
+        String[] busArray = new String[busList.size()];
+        String[] busStarting = new String[busList.size()];
+        String[] busArrived = new String[busList.size()];
+
+        //store all bus detail into array
+        for(int i=0; i<busList.size(); i++){
+            busArray[i] = busList.get(i)[0];
+            busStarting[i] = busList.get(i)[4];
+            busArrived[i] = busList.get(i)[5];
+        }
 
         //show the record in table form seperate by each bus
         for(int i=0; i<scheduleList.size(); i++) {
+            //Header Data
+            String startPoint="", endPoint="";
+            //header row and textview
+            TableRow headerRow = new TableRow(this);
+            headerRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            TextView header = new TextView(BookingPage.this);
+            header.setLayoutParams(new TableRow.LayoutParams(0,TableRow.LayoutParams.WRAP_CONTENT,1));
+            header.setGravity(Gravity.CENTER);
+            header.setTypeface(null, Typeface.BOLD);
+            boolean isNewBus=false;
+            //check is there another bus schedule
+            if(i>0){
+                if(!scheduleList.get(i)[5].equals(scheduleList.get(i-1)[5])){
+                    isNewBus=true;
+                }
+            }
+            if(i==0||isNewBus == true){
+                for(int j=0; j<busList.size(); j++){
+                    //get start and end Point
+                    if(scheduleList.get(i)[5].equals(busList.get(j)[0])){
+                        for(int k=0; k<6; k++){
+                            header.setText(busList.get(j)[i]);
+                            headerRow.addView(header);
+                            if(scheduleList.get(i)[4].equals(busArray[0])){
+                                tableLayout1.addView(headerRow);
+                            } else if(scheduleList.get(i)[4].equals(busArray[1])){
+                                tableLayout2.addView(headerRow);
+                            }
+                        }
+                    }
+                }
+            }
             TableRow newRow = new TableRow(this);
             newRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-            for (int j = 0; j < 5; j++) {
-                TextView scheduleTime = new TextView(BookingPage.this); //payment status
+            //Show all record in one row
+            for (int j = 0; j < 6; j++) {
+                //Record textview
+                TextView scheduleTime = new TextView(BookingPage.this);
                 scheduleTime.setLayoutParams(new TableRow.LayoutParams(
                         0,
                         TableRow.LayoutParams.WRAP_CONTENT,
@@ -115,7 +163,6 @@ public class BookingPage extends AppCompatActivity {
                 ));
                 scheduleTime.setText(scheduleList.get(i)[j]);
                 scheduleTime.setGravity(Gravity.CENTER);
-                //scheduletime.setTypeface(null, Typeface.BOLD);
                 newRow.addView(scheduleTime);
             }
             if(scheduleList.get(i)[4].equals(busArray[0])){
@@ -124,6 +171,5 @@ public class BookingPage extends AppCompatActivity {
                 tableLayout2.addView(newRow);
             }
         }
-        setContentView(R.layout.booking_schedule);
     }
 }

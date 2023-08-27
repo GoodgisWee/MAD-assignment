@@ -1,9 +1,12 @@
 package my.edu.wheelio;
 
+import android.database.sqlite.SQLiteConstraintException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -49,23 +52,34 @@ public class MainActivity extends AppCompatActivity {
 
         mySQLiteAdapter.deleteAll();
 
-        mySQLiteAdapter.insertUserTable("Ryan Li", "ryan123@gmail.com", "ryan123", 100, "student");
-        mySQLiteAdapter.insertUserTable("Nicholas Ngiam", "nicholas123@gmail.com", "nicholas123", 100, "student");
-        mySQLiteAdapter.insertUserTable("Wee Jeng Kai", "wee123@gmail.com", "wee123", 100, "driver");
+        try {
+            mySQLiteAdapter.insertUserTable("Ryan Li", "ryan123@gmail.com", "ryan123", 100, "student");
+            mySQLiteAdapter.insertUserTable("Nicholas Ngiam", "nicholas123@gmail.com", "nicholas123", 100, "student");
+            mySQLiteAdapter.insertUserTable("Wee Jeng Kai", "wee123@gmail.com", "wee123", 100, "driver");
 
-        mySQLiteAdapter.insertBusTable("ABC123", "Block N", currentTimeStr, "Block A", "WestLake");
-        mySQLiteAdapter.insertBusTable("XYZ123", "Block H", currentTimeStr, "Block P", "Harvard");
+            mySQLiteAdapter.insertBusTable("ABC123", "Block N", currentTimeStr, "Block A", "WestLake");
+            mySQLiteAdapter.insertBusTable("XYZ123", "Block H", currentTimeStr, "Block P", "Harvard");
 
-        mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 30, 1001);
-        mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 30, 1001);
-        mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 30, 1001);
-        mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 50, 1002);
-        mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 50, 1002);
-        mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 50, 1002);
+            if(!mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 30, 1001020302)){
+                //Toast.makeText(this, "Error when inserting schedule into bus 1001020302", Toast.LENGTH_SHORT).show();
+            }
+            mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 30, 1001);
+            mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 30, 1001);
+            mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 50, 1002);
+            mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 50, 1002);
+            mySQLiteAdapter.insertScheduleTable(currentTimeStr, oneHourLaterStr, twoHourLaterStr, 50, 1002);
 
-        mySQLiteAdapter.insertBookingTable(formattedDate, "WestLake", "Block H", 10001, 1);
-        mySQLiteAdapter.insertBookingTable(formattedDate, "Harvard", "Block A", 10002, 3);
-        mySQLiteAdapter.insertBookingTable(formattedDate, "Block B", "Harvard", 10003, 4);
+            if(!mySQLiteAdapter.insertBookingTable(formattedDate, "WestLake", "Block H", 100021, 1)){
+                Toast.makeText(this, "Error when inserting schedule into bus 232", Toast.LENGTH_SHORT).show();
+            }
+            mySQLiteAdapter.insertBookingTable(formattedDate, "Harvard", "Block A", 10002, 3);
+            mySQLiteAdapter.insertBookingTable(formattedDate, "Block B", "Harvard", 10003, 4);
+            ll.addView(listContent);
+        } catch (Exception e) {
+            listContent.setText("hahahshsa");
+            ll.addView(listContent);
+            //setContentView(ll);
+        }
 
         mySQLiteAdapter.close();
 
@@ -84,21 +98,19 @@ public class MainActivity extends AppCompatActivity {
         }
         for(int i=1; i<busList.size(); i++) {
             for(int j=0; j<busList.get(i).length; j++){
-                listContent.setText(busList.get(i)[j]);
+                listContent.setText(busList.get(i)[0]);
             }
         }
+        setContentView(ll);
         for(int i=1; i<scheduleList.size(); i++) {
             for(int j=0; j<scheduleList.get(i).length; j++){
-                listContent.setText(scheduleList.get(i)[j]);
+                //listContent.setText(scheduleList.get(i)[j]);
             }
         }
         for(int i=1; i<bookingList.size(); i++) {
             for (int j = 0; j < bookingList.get(i).length; j++) {
-                listContent.setText(bookingList.get(i)[j]);
+                //listContent.setText(bookingList.get(i)[j]);
             }
         }
-
-        ll.addView(listContent);
-        setContentView(ll);
     }
 }
