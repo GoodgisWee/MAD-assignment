@@ -3,15 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Document/1 MAD/Assignment2/app/src/main/res/layout/activity_booking_page.xml" value="0.14666666666666667" />
-        <entry key="..\:/Document/1 MAD/Assignment2/app/src/main/res/layout/activity_booking_page2.xml" value="0.22" />
-        <entry key="..\:/Document/1 MAD/Assignment2/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Document/1 MAD/Assignment2/app/src/main/res/layout/booking_schedule.xml" value="0.1796875" />
-        <entry key="..\:/Document/1 MAD/Assignment2/app/src/main/res/layout/fragment_dashboard.xml" value="0.22" />
-        <entry key="..\:/Document/1 MAD/Assignment2/app/src/main/res/layout/fragment_home.xml" value="0.22" />
-        <entry key="..\:/Document/1 MAD/Assignment2/app/src/main/res/menu/bottom_nav_menu.xml" value="0.1796875" />
-        <entry key="..\:/Document/1 MAD/Assignment2/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.19583333333333333" />
-        <entry key="..\:/Document/1 MAD/Assignment2/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.19583333333333333" />
+        <entry key="..\:/Document/1 MAD/practical/Practical5/app/src/main/res/layout/activity_main.xml" value="0.16666666666666666" />
       </map>
     </option>
   </component>

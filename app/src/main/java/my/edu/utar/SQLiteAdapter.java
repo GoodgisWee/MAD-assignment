@@ -1,4 +1,4 @@
-package my.edu.wheelio;
+package my.edu.utar;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -17,7 +17,7 @@ public class SQLiteAdapter {
     public static final String BOOKING_TABLE = "BOOKING_TABLE";
     public static final String BUS_TABLE = "BUS_TABLE";
     public static final String SCHEDULE_TABLE = "SCHEDULE_TABLE";
-    public static final int MYDATABASE_VERSION = 3;
+    public static final int MYDATABASE_VERSION = 5;
 
     //User table content
     public static final String USER_NAME = "userName";
@@ -43,8 +43,10 @@ public class SQLiteAdapter {
     public static final String BOOKING_DATE = "bookingDate";
     public static final String BOOKING_PICKUP = "bookingPickup";
     public static final String BOOKING_DROPOFF = "bookingDropoff";
+    public static final String BOOKING_STATUS = "bookingStatus";
 
-    //-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
     //SQL command to create all table
     private static final String SCRIPT_CREATE_USER_TABLE =
             "create table if not exists " + USER_TABLE
@@ -80,12 +82,14 @@ public class SQLiteAdapter {
                     + BOOKING_DATE + " text not null, "
                     + BOOKING_PICKUP + " text not null, "
                     + BOOKING_DROPOFF + " text not null, "
+                    + BOOKING_STATUS + " text not null, "
                     + "userID INTEGER NOT NULL, "
                     + "scheduleID INTEGER NOT NULL, "
                     + "FOREIGN KEY (userID) REFERENCES " + USER_TABLE + "(userID), "
                     + "FOREIGN KEY (scheduleID) REFERENCES " + SCHEDULE_TABLE + "(scheduleID));";
 
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+
     //variables for db creation
     private Context context;
     private SQLiteHelper sqLiteHelper;
@@ -117,8 +121,8 @@ public class SQLiteAdapter {
         return this;
     }
 
-//-----------------------------------------------------------------------------
-    //insert command for all table
+//----------------------------------------------------------------------------------
+    //INSERT INTO TABLE
     public long insertUserTable(String content1, String content2, String content3, int content4, String content5)
     {
         ContentValues contentValues = new ContentValues();
@@ -162,21 +166,22 @@ public class SQLiteAdapter {
         return false;
     }
 
-    public boolean insertBookingTable(String content1, String content2, String content3, int content4, int content5)
+    public boolean insertBookingTable(String content1, String content2, String content3, String content4, int content5, int content6)
     {
         ArrayList<String[]> scheduleList = readSchedule();
         ArrayList<String[]> userList = readUser();
         ContentValues contentValues = new ContentValues();
         for(int i=0; i<scheduleList.size(); i++){
-            if(scheduleList.get(i)[0].equals(Integer.toString(content5))){
+            if(scheduleList.get(i)[0].equals(Integer.toString(content6))){
                 for(int j=0; j<userList.size(); j++) {
-                    if (userList.get(i)[0].equals(Integer.toString(content4))) {
+                    if (userList.get(j)[0].equals(Integer.toString(content5))) {
                         //to write the content to the column of KEY_CONTENT
                         contentValues.put(BOOKING_DATE, content1);
                         contentValues.put(BOOKING_PICKUP, content2);
                         contentValues.put(BOOKING_DROPOFF, content3);
-                        contentValues.put("userID", content4);
-                        contentValues.put("scheduleID", content5);
+                        contentValues.put(BOOKING_STATUS, content4);
+                        contentValues.put("userID", content5);
+                        contentValues.put("scheduleID", content6);
                         sqLiteDatabase.insert(BOOKING_TABLE, null, contentValues);
                         return true;
                     }
@@ -292,7 +297,7 @@ public class SQLiteAdapter {
 
     public ArrayList<String[]> readBooking()
     {
-        String [] columns = new String[] {"bookingID", BOOKING_DATE, BOOKING_PICKUP, BOOKING_DROPOFF, "userID", "scheduleID"};
+        String [] columns = new String[] {"bookingID", BOOKING_DATE, BOOKING_PICKUP, BOOKING_DROPOFF, BOOKING_STATUS, "userID", "scheduleID"};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(BOOKING_TABLE, columns,
                 null, null, null, null, null) ;
@@ -303,8 +308,9 @@ public class SQLiteAdapter {
         int index_CONTENT_1 = cursor.getColumnIndex(BOOKING_DATE);
         int index_CONTENT_2 = cursor.getColumnIndex(BOOKING_PICKUP);
         int index_CONTENT_3 = cursor.getColumnIndex(BOOKING_DROPOFF);
-        int index_CONTENT_4 = cursor.getColumnIndex("userID");
-        int index_CONTENT_5 = cursor.getColumnIndex("scheduleID");
+        int index_CONTENT_4 = cursor.getColumnIndex(BOOKING_STATUS);
+        int index_CONTENT_5 = cursor.getColumnIndex("userID");
+        int index_CONTENT_6 = cursor.getColumnIndex("scheduleID");
 
         int count =0;
         //it will read all the data until finish
@@ -318,6 +324,7 @@ public class SQLiteAdapter {
                 resultArray[3]=cursor.getString(index_CONTENT_3);
                 resultArray[4]=cursor.getString(index_CONTENT_4);
                 resultArray[5]=cursor.getString(index_CONTENT_5);
+                resultArray[6]=cursor.getString(index_CONTENT_6);
                 resultList.add(resultArray);
             }
             count++;
@@ -332,7 +339,7 @@ public class SQLiteAdapter {
         sqLiteHelper.close();
     }
 
-    //DELETE TABLE
+    //reduce the redundancy
     public int deleteAll()
     {
         sqLiteDatabase.delete(BOOKING_TABLE,null, null);
@@ -357,19 +364,7 @@ public class SQLiteAdapter {
                             @Nullable SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
         }
-        @Override
-        public void onConfigure(SQLiteDatabase db) {
-            db.setForeignKeyConstraintsEnabled(true);
-            super.onConfigure(db);
-        }
-        // Add this method to enable foreign key support when the database is opened.
-        @Override
-        public void onOpen(SQLiteDatabase db) {
-            super.onOpen(db);
-            if (!db.isReadOnly()) {
-                db.execSQL("PRAGMA foreign_keys=ON;");
-            }
-        }
+
         //create a table with column
         @Override
         public void onCreate(SQLiteDatabase db) {
@@ -384,15 +379,11 @@ public class SQLiteAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON;");
             db.execSQL(SCRIPT_CREATE_USER_TABLE);
             db.execSQL(SCRIPT_CREATE_BUS_TABLE);
             db.execSQL(SCRIPT_CREATE_SCHEDULE_TABLE);
             db.execSQL(SCRIPT_CREATE_BOOKING_TABLE);
-
-            if (oldVersion < 3) {
-                sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON;");
-                // If upgrading from version 1 to 2, execute the updated SCRIPT_CREATE_DATABASE
+            if (oldVersion < 5) {
                 db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
                 db.execSQL("DROP TABLE IF EXISTS " + BUS_TABLE);
                 db.execSQL("DROP TABLE IF EXISTS " + SCHEDULE_TABLE);
@@ -406,9 +397,7 @@ public class SQLiteAdapter {
             }
         }
     }
-
-    private void initializeTableSequence(){
-        //make all table PK starting from desired value
+    private void initializeTableSequence() {
         ContentValues values = new ContentValues();
         values.put("userID", 10000);
         values.put(USER_NAME, "DummyUser");
@@ -441,6 +430,7 @@ public class SQLiteAdapter {
         values.put(BOOKING_DATE, "1212-12-12");
         values.put(BOOKING_PICKUP, "DummyPickup");
         values.put(BOOKING_DROPOFF, "DummyDropoff");
+        values.put(BOOKING_STATUS, "none");
         values.put("userID", 10000);
         values.put("scheduleID", 0);
         sqLiteDatabase.insert(BOOKING_TABLE, null, values);
