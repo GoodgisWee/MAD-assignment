@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">My Application</string>
+
+    <string-array name="location_items">
+        <item>PickUp Point</item>
+        <item>Block N</item>
+        <item>Block G</item>
+        <item>Block H</item>
+        <item>WestLake</item>
+        <item>Harvard</item>
+        <item>Stanford</item>
+    </string-array>
 </resources>
+

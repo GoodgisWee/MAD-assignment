@@ -56,8 +56,36 @@
                 android:ems="10"
                 android:inputType="date"
                 android:focusable="true"
+                android:hint="Choose Date Here"
                 android:focusableInTouchMode="true" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp">
 
+                <EditText
+                    android:id="@+id/editTextTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:ems="10"
+                    android:inputType="date"
+                    android:focusable="true"
+                    android:hint="Choose Time (Onwards)"
+                    android:focusableInTouchMode="true" />
+
+                <EditText
+                    android:id="@+id/ampm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:ems="10"
+                    android:inputType="none" />
+
+            </LinearLayout>
 
             <ImageButton
                 android:id="@+id/searchBtn"
@@ -69,90 +97,96 @@
         </LinearLayout>
 
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="#FFEE99"
-            android:layout_alignParentBottom="true">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center"
-                android:background="#FFDD77">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="#FFEE99"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="50dp">
 
-                <TextView
-                    android:id="@+id/homeBtnDesc"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="Home"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:background="#FFDD77">
 
-                <ImageButton
-                    android:id="@+id/homeBtn"
-                    android:layout_width="120dp"
-                    android:layout_height="48dp"
-                    android:layout_below="@id/homeBtnDesc"
-                    android:layout_centerHorizontal="true"
-                    android:background="#FFDD77"
-                    app:srcCompat="@drawable/ic_baseline_home_24" />
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/homeBtnDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="Home"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center">
+                    <ImageButton
+                        android:id="@+id/homeBtn"
+                        android:layout_width="120dp"
+                        android:layout_height="48dp"
+                        android:layout_below="@id/homeBtnDesc"
+                        android:layout_centerHorizontal="true"
+                        android:background="#FFDD77"
+                        app:srcCompat="@drawable/ic_baseline_home_24" />
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/bookingBtnDesc"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="Booking"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:layout_weight="1"
+                    android:layout_gravity="center">
 
-                <ImageButton
-                    android:id="@+id/bookingBtn"
-                    android:layout_width="120dp"
-                    android:layout_height="48dp"
-                    android:layout_below="@id/bookingBtnDesc"
-                    android:layout_centerHorizontal="true"
-                    android:background="#FFEE99"
-                    app:srcCompat="@drawable/ic_baseline_library_books_24" />
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/bookingBtnDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="Booking"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_gravity="center">
+                    <ImageButton
+                        android:id="@+id/bookingBtn"
+                        android:layout_width="120dp"
+                        android:layout_height="48dp"
+                        android:layout_below="@id/bookingBtnDesc"
+                        android:layout_centerHorizontal="true"
+                        android:background="#FFEE99"
+                        app:srcCompat="@drawable/ic_baseline_library_books_24" />
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/profileBtnDesc"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="Profile"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:layout_weight="1"
+                    android:layout_gravity="center">
 
-                <ImageButton
-                    android:id="@+id/profileBtn"
-                    android:layout_width="120dp"
-                    android:layout_height="48dp"
-                    android:layout_below="@id/profileBtnDesc"
-                    android:layout_centerHorizontal="true"
-                    android:background="#FFEE99"
-                    app:srcCompat="@drawable/ic_baseline_face_24" />
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/profileBtnDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="Profile"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
 
-        </LinearLayout>
+                    <ImageButton
+                        android:id="@+id/profileBtn"
+                        android:layout_width="120dp"
+                        android:layout_height="48dp"
+                        android:layout_below="@id/profileBtnDesc"
+                        android:layout_centerHorizontal="true"
+                        android:background="#FFEE99"
+                        app:srcCompat="@drawable/ic_baseline_face_24" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

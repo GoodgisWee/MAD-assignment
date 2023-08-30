@@ -3,7 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/drawable/rounded_button.xml" value="0.19583333333333333" />
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/layout/activity_booking_page2.xml" value="0.14666666666666667" />
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/layout/activity_booking_page_model.xml" value="0.1796875" />
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/layout/booking_schedule.xml" value="0.16666666666666666" />
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/layout/booking_schedule2.xml" value="0.1" />
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/layout/datepicker.xml" value="0.115625" />
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/layout/schedule_cardview.xml" value="0.13802083333333334" />
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/layout/schedule_item.xml" value="0.2514792899408284" />
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/layout/schedule_recycleview.xml" value="0.13802083333333334" />
+        <entry key="..\:/Document/1 MAD/new/Ass2/app/src/main/res/layout/timepicker.xml" value="0.1796875" />
         <entry key="..\:/Document/1 MAD/practical/Practical5/app/src/main/res/layout/activity_main.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/USER/Documents/GitHub/MAD-assignment/app/src/main/res/layout/activity_booking_page2.xml" value="0.11875" />
+        <entry key="..\:/Users/USER/Documents/GitHub/MAD-assignment/app/src/main/res/layout/booking_schedule.xml" value="0.11875" />
+        <entry key="..\:/Users/USER/Documents/GitHub/MAD-assignment/app/src/main/res/layout/schedule_cardview.xml" value="0.2681912681912682" />
+        <entry key="..\:/Users/USER/Documents/GitHub/MAD-assignment/app/src/main/res/layout/schedule_recycleview.xml" value="0.22" />
       </map>
     </option>
   </component>

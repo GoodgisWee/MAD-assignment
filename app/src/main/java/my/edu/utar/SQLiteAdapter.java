@@ -17,7 +17,7 @@ public class SQLiteAdapter {
     public static final String BOOKING_TABLE = "BOOKING_TABLE";
     public static final String BUS_TABLE = "BUS_TABLE";
     public static final String SCHEDULE_TABLE = "SCHEDULE_TABLE";
-    public static final int MYDATABASE_VERSION = 5;
+    public static final int MYDATABASE_VERSION = 9;
 
     //User table content
     public static final String USER_NAME = "userName";
@@ -36,7 +36,7 @@ public class SQLiteAdapter {
     //schedule table content
     public static final String SCHEDULE_TIME_STARTING = "timeStarting";
     public static final String SCHEDULE_TIME_ENDING = "timeEnding";
-    public static final String SCHEDULE_TIME_BACKENDING = "timeBackEnding";
+    public static final String SCHEDULE_DATE = "scheduleDate";
     public static final String SCHEDULE_SEAT_AVAILABLE = "seatAvailable";
 
     //booking table content
@@ -71,7 +71,7 @@ public class SQLiteAdapter {
                     + " (scheduleID INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + SCHEDULE_TIME_STARTING + " text not null, "
                     + SCHEDULE_TIME_ENDING + " text not null, "
-                    + SCHEDULE_TIME_BACKENDING + " text not null, "
+                    + SCHEDULE_DATE + " text not null, "
                     + SCHEDULE_SEAT_AVAILABLE + " INTEGER not null, "
                     + "busID INTEGER NOT NULL, "
                     + "FOREIGN KEY (busID) REFERENCES " + BUS_TABLE + "(busID));";
@@ -156,7 +156,7 @@ public class SQLiteAdapter {
             if(busList.get(i)[0].equals(Integer.toString(content5))){
                 contentValues.put(SCHEDULE_TIME_STARTING, content1);
                 contentValues.put(SCHEDULE_TIME_ENDING, content2);
-                contentValues.put(SCHEDULE_TIME_BACKENDING, content3);
+                contentValues.put(SCHEDULE_DATE, content3);
                 contentValues.put(SCHEDULE_SEAT_AVAILABLE, content4);
                 contentValues.put("busID", content5);
                 sqLiteDatabase.insert(SCHEDULE_TABLE, null, contentValues);
@@ -264,9 +264,43 @@ public class SQLiteAdapter {
         return resultList;
     }
 
+    public ArrayList<String[]> readBusByCondition(String condition, String conditionValue)
+    {
+        String [] columns = new String[] {"busID", BUS_PLATE_NO, BUS_CURRENT_STOP, BUS_CURRENT_STOP_TIME, BUS_STARTING_PLACE, BUS_ENDING_PLACE};
+        //to locate the cursor
+        Cursor cursor = sqLiteDatabase.query(BUS_TABLE, columns,
+                condition+"=?", new String[]{conditionValue}, null, null,
+                BUS_PLATE_NO +" ASC") ;
+
+        ArrayList<String[]> resultList = new ArrayList<>();
+
+        int index_CONTENT = cursor.getColumnIndex("busID");
+        int index_CONTENT_1 = cursor.getColumnIndex(BUS_PLATE_NO);
+        int index_CONTENT_2 = cursor.getColumnIndex(BUS_CURRENT_STOP);
+        int index_CONTENT_3 = cursor.getColumnIndex(BUS_CURRENT_STOP_TIME);
+        int index_CONTENT_4 = cursor.getColumnIndex(BUS_STARTING_PLACE);
+        int index_CONTENT_5 = cursor.getColumnIndex(BUS_ENDING_PLACE);
+
+        //it will read all the data until finish
+        for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
+        {
+            String[] resultArray = new String[6];
+            resultArray[0]=cursor.getString(index_CONTENT);
+            resultArray[1]=cursor.getString(index_CONTENT_1);
+            resultArray[2]=cursor.getString(index_CONTENT_2);
+            resultArray[3]=cursor.getString(index_CONTENT_3);
+            resultArray[4]=cursor.getString(index_CONTENT_4);
+            resultArray[5]=cursor.getString(index_CONTENT_5);
+            resultList.add(resultArray);
+
+        }
+
+        return resultList;
+    }
+
     public ArrayList<String[]> readSchedule()
     {
-        String [] columns = new String[] {"scheduleID", SCHEDULE_TIME_STARTING, SCHEDULE_TIME_ENDING, SCHEDULE_TIME_BACKENDING, SCHEDULE_SEAT_AVAILABLE, "busID"};
+        String [] columns = new String[] {"scheduleID", SCHEDULE_TIME_STARTING, SCHEDULE_TIME_ENDING, SCHEDULE_DATE, SCHEDULE_SEAT_AVAILABLE, "busID"};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(SCHEDULE_TABLE, columns,
                 null, null, null, null, null) ;
@@ -276,7 +310,43 @@ public class SQLiteAdapter {
         int index_CONTENT = cursor.getColumnIndex("scheduleID");
         int index_CONTENT_1 = cursor.getColumnIndex(SCHEDULE_TIME_STARTING);
         int index_CONTENT_2 = cursor.getColumnIndex(SCHEDULE_TIME_ENDING);
-        int index_CONTENT_3 = cursor.getColumnIndex(SCHEDULE_TIME_BACKENDING);
+        int index_CONTENT_3 = cursor.getColumnIndex(SCHEDULE_DATE);
+        int index_CONTENT_4 = cursor.getColumnIndex(SCHEDULE_SEAT_AVAILABLE);
+        int index_CONTENT_5 = cursor.getColumnIndex("busID");
+
+        int count =0;
+        //it will read all the data until finish
+        for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
+        {
+            if(count>0) {
+                String[] resultArray = new String[6];
+                resultArray[0]=cursor.getString(index_CONTENT);
+                resultArray[1]=cursor.getString(index_CONTENT_1);
+                resultArray[2]=cursor.getString(index_CONTENT_2);
+                resultArray[3]=cursor.getString(index_CONTENT_3);
+                resultArray[4]=cursor.getString(index_CONTENT_4);
+                resultArray[5]=cursor.getString(index_CONTENT_5);
+                resultList.add(resultArray);
+            }
+            count++;
+        }
+        return resultList;
+    }
+
+    public ArrayList<String[]> readScheduleByCondition(String condition, String conditionValue)
+    {
+        String [] columns = new String[] {"scheduleID", SCHEDULE_TIME_STARTING, SCHEDULE_TIME_ENDING, SCHEDULE_DATE, SCHEDULE_SEAT_AVAILABLE, "busID"};
+        //to locate the cursor
+        Cursor cursor = sqLiteDatabase.query(SCHEDULE_TABLE, columns,
+                condition+"=?", new String[]{conditionValue}, null, null,
+                SCHEDULE_TIME_STARTING +" ASC") ;
+
+        ArrayList<String[]> resultList = new ArrayList<>();
+
+        int index_CONTENT = cursor.getColumnIndex("scheduleID");
+        int index_CONTENT_1 = cursor.getColumnIndex(SCHEDULE_TIME_STARTING);
+        int index_CONTENT_2 = cursor.getColumnIndex(SCHEDULE_TIME_ENDING);
+        int index_CONTENT_3 = cursor.getColumnIndex(SCHEDULE_DATE);
         int index_CONTENT_4 = cursor.getColumnIndex(SCHEDULE_SEAT_AVAILABLE);
         int index_CONTENT_5 = cursor.getColumnIndex("busID");
 
@@ -317,7 +387,7 @@ public class SQLiteAdapter {
         for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
         {
             if(count>0){
-                String[] resultArray = new String[6];
+                String[] resultArray = new String[7];
                 resultArray[0]=cursor.getString(index_CONTENT);
                 resultArray[1]=cursor.getString(index_CONTENT_1);
                 resultArray[2]=cursor.getString(index_CONTENT_2);
@@ -331,6 +401,26 @@ public class SQLiteAdapter {
         }
         return resultList;
     }
+
+//------------------------------------------------------------------------------------------------
+    //UPDATE DB
+    // Update the schedule table based on certain conditions
+    public boolean updateScheduleTableByInt(String updateColumn, int updateValues, String conditionColumn, String conditionValue) {
+        ContentValues newValues = new ContentValues();
+        newValues.put(updateColumn, updateValues);
+
+        int rowsAffected = sqLiteDatabase.update(SCHEDULE_TABLE, newValues, conditionColumn + "=?", new String[]{conditionValue});
+        return rowsAffected > 0;
+    }
+
+    public boolean updateScheduleTableByString(String updateColumn, String updateValues, String conditionColumn, String conditionValue) {
+        ContentValues newValues = new ContentValues();
+        newValues.put(updateColumn, updateValues);
+
+        int rowsAffected = sqLiteDatabase.update(SCHEDULE_TABLE, newValues, conditionColumn + "=?", new String[]{conditionValue});
+        return rowsAffected > 0;
+    }
+
 
 //------------------------------------------------------------------------------------------------
     //close the database
@@ -356,6 +446,7 @@ public class SQLiteAdapter {
     }
 
 //------------------------------------------------------------------------------------------------
+    //DB INITIALIZATION
     //SQLiteOpenHelper: A helper class to manage database creation and version management
     public class SQLiteHelper extends SQLiteOpenHelper
     {
@@ -383,7 +474,7 @@ public class SQLiteAdapter {
             db.execSQL(SCRIPT_CREATE_BUS_TABLE);
             db.execSQL(SCRIPT_CREATE_SCHEDULE_TABLE);
             db.execSQL(SCRIPT_CREATE_BOOKING_TABLE);
-            if (oldVersion < 5) {
+            if (oldVersion < 9) {
                 db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
                 db.execSQL("DROP TABLE IF EXISTS " + BUS_TABLE);
                 db.execSQL("DROP TABLE IF EXISTS " + SCHEDULE_TABLE);
@@ -397,7 +488,7 @@ public class SQLiteAdapter {
             }
         }
     }
-    private void initializeTableSequence() {
+    public void initializeTableSequence() {
         ContentValues values = new ContentValues();
         values.put("userID", 10000);
         values.put(USER_NAME, "DummyUser");
@@ -420,7 +511,7 @@ public class SQLiteAdapter {
         values.put("scheduleID", 0);
         values.put(SCHEDULE_TIME_STARTING, "12:12:12");
         values.put(SCHEDULE_TIME_ENDING, "12:12:12");
-        values.put(SCHEDULE_TIME_BACKENDING, "12:12:12");
+        values.put(SCHEDULE_DATE, "1212-12-12");
         values.put(SCHEDULE_SEAT_AVAILABLE, 0);
         values.put("busID", 1000);
         sqLiteDatabase.insert(SCHEDULE_TABLE, null, values);
