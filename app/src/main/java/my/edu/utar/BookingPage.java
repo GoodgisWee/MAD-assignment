@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -31,7 +32,7 @@ import java.util.List;
 public class BookingPage extends AppCompatActivity{
 
     private Spinner pickupSpinner, dropoffSpinner;
-    private String pickUpPoint, dropOffPoint, dateStr, timeStr;
+    private String pickUpPoint, dropOffPoint, dateStr, timeStr, paxStr;
     private ArrayList<String[]> scheduleListByCondition, busList, busListByCondition;
     private ImageButton searchBtn;
     private SQLiteAdapter mySQLiteAdapter;
@@ -41,7 +42,8 @@ public class BookingPage extends AppCompatActivity{
     private List<ScheduleItem> scheduleItemsList;
     private RecyclerView recyclerView;
     private ScheduleAdapter scheduleAdapter;
-    private EditText date, time, ampm;
+    private EditText date, time, pax;
+    private ImageButton homeBtn, bookingBtn, profileBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +54,21 @@ public class BookingPage extends AppCompatActivity{
         dropoffSpinner = findViewById(R.id.dropOff);
         date = findViewById(R.id.editTextDate);
         time = findViewById(R.id.editTextTime);
-        ampm = findViewById(R.id.ampm);
+        pax = findViewById(R.id.pax);
         searchBtn = findViewById(R.id.searchBtn);
+
+        //Bar Navigation
+        homeBtn = findViewById(R.id.homeBtn);
+        bookingBtn = findViewById(R.id.bookingBtn);
+        profileBtn = findViewById(R.id.profileBtn);
+
+        bookingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BookingPage.this, MyTicketActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //database initialization
         mySQLiteAdapter = new SQLiteAdapter(this);
@@ -68,6 +83,7 @@ public class BookingPage extends AppCompatActivity{
         dropoffSpinner.setAdapter(dropOffAdapter);
         dropoffSpinner.setSelection(0);
 
+        //user input validation for spinner class
         pickupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -100,6 +116,7 @@ public class BookingPage extends AppCompatActivity{
             }
         });
 
+        //get the date
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,6 +152,7 @@ public class BookingPage extends AppCompatActivity{
             }
         });
 
+        //get the time value
         time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,12 +177,10 @@ public class BookingPage extends AppCompatActivity{
                                     formattedMinute = String.valueOf(minute);
                                 }
 
-                                time.setText(formattedHour + ":" + formattedMinute + ":00");
-
                                 if (hour < 12) {
-                                    ampm.setText("a.m.");
+                                    time.setText(formattedHour + ":" + formattedMinute + ":00 a.m.");
                                 } else {
-                                    ampm.setText("p.m.");
+                                    time.setText(formattedHour + ":" + formattedMinute + ":00 p.m.");
                                 }
                             }
                         }, tHour, tMinute, false);
@@ -172,13 +188,15 @@ public class BookingPage extends AppCompatActivity{
             }
         });
 
+        //get all result and pass to BookingPageModel
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pickUpPoint = pickupSpinner.getSelectedItem().toString();
                 dropOffPoint = dropoffSpinner.getSelectedItem().toString();
                 dateStr = date.getText().toString();
-                timeStr = time.getText().toString();
+                timeStr = time.getText().toString().replaceAll("(?i)[ ]?[ap]\\.[ ]?m\\.", "").trim();
+                paxStr = pax.getText().toString();
 
                 if (pickUpPoint.equals("PickUp Point") || pickUpPoint.equals("DropOff Point")) {
                     Toast.makeText(BookingPage.this, "Invalid PickUp / DropOff Point", Toast.LENGTH_SHORT).show();
@@ -188,6 +206,7 @@ public class BookingPage extends AppCompatActivity{
                     intent.putExtra("dropOffPoint", dropOffPoint);
                     intent.putExtra("dateStr", dateStr);
                     intent.putExtra("timeStr", timeStr);
+                    intent.putExtra("paxStr", paxStr);
                     startActivity(intent);
                 }
             }

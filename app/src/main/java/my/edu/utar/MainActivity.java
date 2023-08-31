@@ -1,5 +1,6 @@
 package my.edu.utar;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -206,6 +207,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String[]> busList = mySQLiteAdapter.readBus();
         ArrayList<String[]> bookingList = mySQLiteAdapter.readBooking();
         ArrayList<String[]> scheduleList = mySQLiteAdapter.readSchedule();
+
+        Intent intent = new Intent(this, BookingPage.class);
+        startActivity(intent);
         /*//read the data from the table
         mySQLiteAdapter.openToRead();
         //String contentRead = mySQLiteAdapter.queueAll();

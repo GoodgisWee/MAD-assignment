@@ -10,13 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
+            android:name=".MyTicketActivity"
+            android:exported="false" />
+        <activity
             android:name=".model.BookingPageModel"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
-            android:exported="false"></activity>
-        <activity
             android:name=".BookingPage"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

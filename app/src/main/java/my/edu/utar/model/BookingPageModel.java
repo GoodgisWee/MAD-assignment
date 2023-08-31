@@ -1,8 +1,10 @@
 package my.edu.utar.model;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +27,8 @@ import java.util.List;
 import java.util.Locale;
 
 import my.edu.utar.BookingPage;
+import my.edu.utar.MainActivity;
+import my.edu.utar.MyTicketActivity;
 import my.edu.utar.R;
 import my.edu.utar.SQLiteAdapter;
 import my.edu.utar.ScheduleAdapter;
@@ -39,9 +43,10 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
     private RecyclerView recyclerView, scheduleRecyclerView;
     private ScheduleAdapter scheduleAdapter;
     private SQLiteAdapter mySQLiteAdapter;
-    private String pickUpPoint, dropOffPoint, dateStr, timeStr, dateStrConverted;
+    private String pickUpPoint, dropOffPoint, dateStr, timeStr, dateStrConverted, paxStr;
     private ImageButton dateButton;
     private TextView dateTextView;
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,8 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
             dropOffPoint = extras.getString("dropOffPoint");
             dateStr = extras.getString("dateStr");
             timeStr = extras.getString("timeStr");
+            paxStr = extras.getString("paxStr");
+            int count = 0;
             // Find your dateButton by its ID
             dateButton = findViewById(R.id.dateButton);
 
@@ -149,41 +156,66 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
         }
     }
 
-    // Booking success message
+    //Handle booking operation
     @Override
     public void onBookClick(ScheduleItem scheduleItem) {
-        // Handle the "Book" button click for the selected scheduleItem here
-        // You can access scheduleItem's details like scheduleItem.getScheduleId(),
-        // scheduleItem.getDepartureTime(), etc., to insert the booking into the database.
+        // Create a confirmation dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm Booking");
+        builder.setMessage("Are you sure?");
 
-        // Example:
-        boolean bookingSuccess = mySQLiteAdapter.insertBookingTable(
-                dateStr, pickUpPoint, dropOffPoint, "pending", 10001, Integer.parseInt(scheduleItem.getScheduleId())
-        );
+        // Add buttons to the dialog
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //increase the pax
+                count+=1;
 
-        scheduleListByCondition = mySQLiteAdapter.readScheduleByCondition("scheduleID", scheduleItem.getScheduleId());
-        mySQLiteAdapter.updateScheduleTableByInt("seatAvailable",
-                Integer.parseInt(scheduleListByCondition.get(0)[4])-1, "scheduleID", scheduleItem.getScheduleId());
+                // User clicked Yes, proceed with booking
+                boolean bookingSuccess = mySQLiteAdapter.insertBookingTable(
+                        dateStr, pickUpPoint, dropOffPoint, "current", 10001, Integer.parseInt(scheduleItem.getScheduleId())
+                );
 
-        // Your code to update the seat availability goes here
-        // Use the scheduleItem.getScheduleId() to identify the selected schedule
+                scheduleListByCondition = mySQLiteAdapter.readScheduleByCondition("scheduleID", scheduleItem.getScheduleId());
+                mySQLiteAdapter.updateScheduleTableByInt("seatAvailable",
+                        Integer.parseInt(scheduleListByCondition.get(0)[4]) - 1, "scheduleID", scheduleItem.getScheduleId());
 
-        if (bookingSuccess) {
-            Toast.makeText(this, "Booking successful! Now redirecting you back to booking page....",
-                    Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // This code will run after 5 seconds
-                    Intent intent = new Intent(BookingPageModel.this, BookingPage.class);
-                    startActivity(intent);
+                // Your code to update the seat availability goes here
+                // Use the scheduleItem.getScheduleId() to identify the selected schedule
+
+                if(count < Integer.parseInt(paxStr) && bookingSuccess){
+                    Toast.makeText(BookingPageModel.this, "Booking successful! "+ count + " more ticket to go !!",
+                            Toast.LENGTH_SHORT).show();
+                } else if (bookingSuccess) {
+                    Toast.makeText(BookingPageModel.this, "Booking successful! Now redirecting you back to booking page....",
+                            Toast.LENGTH_SHORT).show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // This code will run after 3 seconds
+                            Intent intent = new Intent(BookingPageModel.this, MyTicketActivity.class);
+                            startActivity(intent);
+                        }
+                    }, 3000); // 3000 milliseconds (3 seconds)
+                } else {
+                    // Booking failed, show an error message
+                    Toast.makeText(BookingPageModel.this, "Booking failed. Please try again later.", Toast.LENGTH_SHORT).show();
                 }
-            }, 3000); // 3000 milliseconds (3 seconds)
-        } else {
-            // Booking failed, show an error message
-            Toast.makeText(this, "Booking failed. Please try again later.", Toast.LENGTH_SHORT).show();
-        }
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User clicked No, do nothing
+            }
+        });
+
+        // Show the dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
+
 
     private void openDatePickerDialog() {
         // Create a DatePickerDialog to allow the user to select a new date
