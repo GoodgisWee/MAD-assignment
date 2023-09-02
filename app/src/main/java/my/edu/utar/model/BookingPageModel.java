@@ -184,10 +184,10 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
                 // Use the scheduleItem.getScheduleId() to identify the selected schedule
 
                 if(count < Integer.parseInt(paxStr) && bookingSuccess){
-                    Toast.makeText(BookingPageModel.this, "Booking successful! "+ count + " more ticket to go !!",
+                    Toast.makeText(BookingPageModel.this, "Booking successful, "+ count + " more ticket to go !!",
                             Toast.LENGTH_SHORT).show();
                 } else if (bookingSuccess) {
-                    Toast.makeText(BookingPageModel.this, "Booking successful! Now redirecting you back to booking page....",
+                    Toast.makeText(BookingPageModel.this, "Booking successful! Now redirecting you to booking page....",
                             Toast.LENGTH_SHORT).show();
                     new Handler().postDelayed(new Runnable() {
                         @Override

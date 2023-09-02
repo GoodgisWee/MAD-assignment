@@ -94,7 +94,7 @@ public class BookingPage extends AppCompatActivity{
                 ArrayAdapter<CharSequence> updatedDropOffAdapter = new ArrayAdapter<>(BookingPage.this, android.R.layout.simple_spinner_item);
                 updatedDropOffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                if (selectedPickupItem.equals("Block N") || selectedPickupItem.equals("Block H") || selectedPickupItem.equals("Block G")) {
+                if (selectedPickupItem.equals("Block N") || selectedPickupItem.equals("Block D") || selectedPickupItem.equals("Block G")) {
                     updatedDropOffAdapter.add("Harvard");
                     updatedDropOffAdapter.add("WestLake");
                     updatedDropOffAdapter.add("Stanford");
@@ -103,7 +103,7 @@ public class BookingPage extends AppCompatActivity{
                 } else {
                     updatedDropOffAdapter.add("Block N");
                     updatedDropOffAdapter.add("Block G");
-                    updatedDropOffAdapter.add("Block H");
+                    updatedDropOffAdapter.add("Block D");
                 }
 
                 // Set the updated adapter to dropoffSpinner
@@ -198,8 +198,15 @@ public class BookingPage extends AppCompatActivity{
                 timeStr = time.getText().toString().replaceAll("(?i)[ ]?[ap]\\.[ ]?m\\.", "").trim();
                 paxStr = pax.getText().toString();
 
+                //input validation
                 if (pickUpPoint.equals("PickUp Point") || pickUpPoint.equals("DropOff Point")) {
                     Toast.makeText(BookingPage.this, "Invalid PickUp / DropOff Point", Toast.LENGTH_SHORT).show();
+                } else if(dateStr.equals("")) {
+                    Toast.makeText(BookingPage.this, "DATE empty column", Toast.LENGTH_SHORT).show();
+                } else if(timeStr.equals("")) {
+                    Toast.makeText(BookingPage.this, "TIME empty column", Toast.LENGTH_SHORT).show();
+                } else if(paxStr.equals("")) {
+                    Toast.makeText(BookingPage.this, "PAX empty column", Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(BookingPage.this, my.edu.utar.model.BookingPageModel.class);
                     intent.putExtra("pickUpPoint", pickUpPoint);
