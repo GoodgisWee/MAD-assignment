@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SplashScreenActivity"
+    android:background="#F9E076">
+
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/logoText"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/logoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:font="@font/league_gothic_regular"
+        android:text="Wheel.io"
+        android:textSize="35dp"
+        android:textColor="#000000"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/movingBus"
+        android:layout_centerInParent="true"
+        android:text="loading..."
+        android:textColor="#000000" />
+
+    <ImageView
+        android:id="@+id/movingBus"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-37dp"
+        app:srcCompat="@drawable/moving_bus" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/movingBus"
+        android:layout_below="@+id/logoText"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="65dp"
+        android:gravity="center"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:text="Do you know?\nThe word 'bus' is derived from the Latin word 'omnibus' which means for all"
+        android:textColor="#000000"
+        android:textSize="18dp" />
+
+
+</RelativeLayout>

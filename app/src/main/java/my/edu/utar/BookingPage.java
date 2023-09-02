@@ -5,10 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -24,12 +22,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class BookingPage extends AppCompatActivity{
+import my.edu.utar.API.Weather;
+
+public class BookingPage extends AppCompatActivity implements Weather.WeatherCallback {
 
     private Spinner pickupSpinner, dropoffSpinner;
     private String pickUpPoint, dropOffPoint, dateStr, timeStr, paxStr;
@@ -50,6 +53,12 @@ public class BookingPage extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking_page2);
 
+        Intent intent = getIntent();
+        String uid = intent.getStringExtra("uid");
+        if(intent.getStringExtra("uid").equals("login")){
+            Toast.makeText(this, "Successfully Login !", Toast.LENGTH_SHORT).show();
+        }
+
         pickupSpinner = findViewById(R.id.pickUp);
         dropoffSpinner = findViewById(R.id.dropOff);
         date = findViewById(R.id.editTextDate);
@@ -57,7 +66,7 @@ public class BookingPage extends AppCompatActivity{
         pax = findViewById(R.id.pax);
         searchBtn = findViewById(R.id.searchBtn);
 
-        //Bar Navigation
+        //Bottom Bar Navigation
         homeBtn = findViewById(R.id.homeBtn);
         bookingBtn = findViewById(R.id.bookingBtn);
         profileBtn = findViewById(R.id.profileBtn);
@@ -66,6 +75,7 @@ public class BookingPage extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BookingPage.this, MyTicketActivity.class);
+                intent.putExtra("uid",uid);
                 startActivity(intent);
             }
         });
@@ -214,9 +224,67 @@ public class BookingPage extends AppCompatActivity{
                     intent.putExtra("dateStr", dateStr);
                     intent.putExtra("timeStr", timeStr);
                     intent.putExtra("paxStr", paxStr);
+                    intent.putExtra("uid",uid);
                     startActivity(intent);
                 }
             }
         });
+
+        //Handle the weather API
+        String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=Kampar&appid=d6cafd3faa892adf54b3bee23f64a95a";
+        getWeatherData(apiUrl);
+    }
+
+    private void getWeatherData(String apiUrl) {
+        Weather weather = new Weather(this);
+        weather.getWeatherData(apiUrl);
+    }
+
+    @Override
+    public void onWeatherDataReceived(String weatherMain, String weatherDesc) {
+        // Update the UI elements with the weather data
+        TextView weatherMainTextView = findViewById(R.id.weatherMain);
+        TextView weatherDescTextView = findViewById(R.id.weatherDesc);
+        ImageView weatherImageView = findViewById(R.id.weatherImage);
+
+        if(weatherMain.equals("Thunderstorm")){
+            weatherMainTextView.setText("OH NO! It's "+weatherMain+ " today");
+            weatherDescTextView.setText("It's "+weatherDesc+"\nPlease be prepare to get wet!!");
+            weatherImageView.setImageResource(R.drawable.thunderstorm);
+        }else if(weatherMain.equals("Rain")) {
+            weatherMainTextView.setText("NOOOO! It's "+weatherMain+ " today");
+            weatherDescTextView.setText("It's " + weatherDesc + "\nMake sure you had prepare an umbrella before going out");
+            weatherImageView.setImageResource(R.drawable.rainy);
+        }else if(weatherMain.equals("Snow")) {
+            weatherMainTextView.setText("Hurray! It's "+weatherMain+ " today");
+            weatherDescTextView.setText("It's " + weatherDesc + "\nFREEZEEEEE!!");
+            weatherImageView.setImageResource(R.drawable.snow);
+        }else if(weatherMain.equals("Clear")) {
+            weatherMainTextView.setText("WOAH! It's "+weatherMain+ " today");
+            weatherDescTextView.setText("It's " + weatherDesc + "\nWhat a great day for picnic!");
+            weatherImageView.setImageResource(R.drawable.clear);
+        }else if(weatherMain.equals("Clouds")) {
+            weatherMainTextView.setText("Yeah! It's "+weatherMain+ " today");
+            weatherDescTextView.setText("It's " + weatherDesc + "\nOpps! it might be raining soon");
+            weatherImageView.setImageResource(R.drawable.cloudy);
+        }else if(weatherMain.equals("Fog")) {
+            weatherMainTextView.setText("Hmmm... It's "+weatherMain+ " today");
+            weatherDescTextView.setText("It's " + weatherDesc + "\nYou can't see me");
+            weatherImageView.setImageResource(R.drawable.fog);
+        }else if(weatherMain.equals("Wind")) {
+            weatherMainTextView.setText("Wheeee! It's "+weatherMain+ " today");
+            weatherDescTextView.setText("It's " + weatherDesc + "\nWindy day ahead!");
+            weatherImageView.setImageResource(R.drawable.wind);
+        }else{
+            weatherMainTextView.setText("Hmm... It's "+weatherMain+ " today");
+            weatherDescTextView.setText("It's " + weatherDesc + "\nWeather can be change anytime, be prepare!!");
+            weatherImageView.setImageResource(R.drawable.weather);
+        }
+    }
+
+    @Override
+    public void onWeatherDataFailed() {
+        // Handle the case where the weather data request failed
+        Toast.makeText(this, "Weather data request failed", Toast.LENGTH_SHORT).show();
     }
 }

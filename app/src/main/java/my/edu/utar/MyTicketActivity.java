@@ -1,16 +1,7 @@
 package my.edu.utar;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,8 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,16 +34,22 @@ public class MyTicketActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private static TicketAdapter ticketAdapter;
     private ArrayList<String[]> ticketList;
+    private ImageButton homeBtn, bookingBtn, profileBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_ticket);
 
+        Intent intent = getIntent();
+        String uid = intent.getStringExtra("uid");
+
+        //initialize database connection
         mySQLiteAdapter = new SQLiteAdapter(this);
         mySQLiteAdapter.openToRead();
-        ticketList = mySQLiteAdapter.readBooking();
+        ticketList = mySQLiteAdapter.readBookingByCondition("userID", uid);
 
+        //initialize recyle view
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -51,6 +60,20 @@ public class MyTicketActivity extends AppCompatActivity {
         // Inside MyTicketActivity onCreate method
         ViewPager viewPager = findViewById(R.id.viewPager);
         TabLayout tabLayout = findViewById(R.id.tabs);
+
+        //Bottom Bar Navigation
+        homeBtn = findViewById(R.id.homeBtn);
+        bookingBtn = findViewById(R.id.bookingBtn);
+        profileBtn = findViewById(R.id.profileBtn);
+
+        homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MyTicketActivity.this, BookingPage.class);
+                intent.putExtra("uid",uid);
+                startActivity(intent);
+            }
+        });
 
         FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @NonNull

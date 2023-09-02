@@ -1,14 +1,11 @@
 package my.edu.utar.model;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
@@ -16,6 +13,10 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.sql.Time;
 import java.text.ParseException;
@@ -43,7 +44,7 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
     private RecyclerView recyclerView, scheduleRecyclerView;
     private ScheduleAdapter scheduleAdapter;
     private SQLiteAdapter mySQLiteAdapter;
-    private String pickUpPoint, dropOffPoint, dateStr, timeStr, dateStrConverted, paxStr;
+    private String pickUpPoint, dropOffPoint, dateStr, timeStr, dateStrConverted, paxStr, uid;
     private ImageButton dateButton;
     private TextView dateTextView;
     private int count = 0;
@@ -61,6 +62,7 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
             dateStr = extras.getString("dateStr");
             timeStr = extras.getString("timeStr");
             paxStr = extras.getString("paxStr");
+            uid = extras.getString("uid");
             int count = 0;
             // Find your dateButton by its ID
             dateButton = findViewById(R.id.dateButton);
@@ -173,7 +175,7 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
 
                 // User clicked Yes, proceed with booking
                 boolean bookingSuccess = mySQLiteAdapter.insertBookingTable(
-                        dateStr, pickUpPoint, dropOffPoint, "current", 10001, Integer.parseInt(scheduleItem.getScheduleId())
+                        dateStr, pickUpPoint, dropOffPoint, "current", Integer.parseInt(uid), Integer.parseInt(scheduleItem.getScheduleId())
                 );
 
                 scheduleListByCondition = mySQLiteAdapter.readScheduleByCondition("scheduleID", scheduleItem.getScheduleId());
@@ -194,6 +196,7 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
                         public void run() {
                             // This code will run after 3 seconds
                             Intent intent = new Intent(BookingPageModel.this, MyTicketActivity.class);
+                            intent.putExtra("uid", uid);
                             startActivity(intent);
                         }
                     }, 3000); // 3000 milliseconds (3 seconds)
