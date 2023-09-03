@@ -4,11 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Document/1 MAD/new/MAD-assignment-Assignment/app/src/main/res/layout/activity_booking_page2.xml" value="0.11730072463768115" />
+        <entry key="..\:/Document/1 MAD/new/MAD-assignment-Assignment/app/src/main/res/layout/activity_google_maps.xml" value="0.14666666666666667" />
         <entry key="..\:/Document/1 MAD/new/MAD-assignment-Assignment/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Document/1 MAD/new/MAD-assignment-Assignment/app/src/main/res/layout/activity_my_ticket.xml" value="0.11730072463768115" />
         <entry key="..\:/Document/1 MAD/new/MAD-assignment-Assignment/app/src/main/res/layout/activity_signup.xml" value="0.1796875" />
         <entry key="..\:/Document/1 MAD/new/MAD-assignment-Assignment/app/src/main/res/layout/activity_user_point.xml" value="0.1796875" />
         <entry key="..\:/Document/1 MAD/new/MAD-assignment-Assignment/app/src/main/res/layout/activity_user_profile.xml" value="0.22" />
+        <entry key="..\:/Document/1 MAD/new/MAD-assignment-Assignment/app/src/main/res/layout/booking_schedule.xml" value="0.1" />
       </map>
     </option>
   </component>
