@@ -97,14 +97,12 @@ public class SQLiteAdapter {
     private SQLiteDatabase sqLiteDatabase;
 
     //constructor for SQLiteAdapter
-    public SQLiteAdapter(Context c)
-    {
+    public SQLiteAdapter(Context c) {
         context = c;
     }
 
     //open the database to write something
-    public SQLiteAdapter openToWrite() throws android.database.SQLException
-    {
+    public SQLiteAdapter openToWrite() throws android.database.SQLException {
         sqLiteHelper = new SQLiteHelper(context, MYDATABASE_NAME, null,
                 MYDATABASE_VERSION);
         sqLiteDatabase = sqLiteHelper.getWritableDatabase(); //writing mode
@@ -113,8 +111,7 @@ public class SQLiteAdapter {
     }
 
     //open the database to read something
-    public SQLiteAdapter openToRead() throws android.database.SQLException
-    {
+    public SQLiteAdapter openToRead() throws android.database.SQLException {
         sqLiteHelper = new SQLiteHelper(context, MYDATABASE_NAME, null,
                 MYDATABASE_VERSION);
         sqLiteDatabase = sqLiteHelper.getReadableDatabase(); //reading mode
@@ -122,10 +119,9 @@ public class SQLiteAdapter {
         return this;
     }
 
-//----------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------
     //INSERT INTO TABLE
-    public long insertUserTable(String content1, String content2, String content3, int content4, String content5)
-    {
+    public long insertUserTable(String content1, String content2, String content3, int content4, String content5) {
         ContentValues contentValues = new ContentValues();
         //to write the content to the column of KEY_CONTENT
         contentValues.put(USER_NAME, content1);
@@ -137,8 +133,7 @@ public class SQLiteAdapter {
         return sqLiteDatabase.insert(USER_TABLE, null, contentValues);
     }
 
-    public long insertBusTable(String content1, String content2, String content3, String content4, String content5)
-    {
+    public long insertBusTable(String content1, String content2, String content3, String content4, String content5) {
         ContentValues contentValues = new ContentValues();
         //to write the content to the column of KEY_CONTENT
         contentValues.put(BUS_PLATE_NO, content1);
@@ -153,8 +148,8 @@ public class SQLiteAdapter {
     public boolean insertScheduleTable(String content1, String content2, String content3, int content4, int content5) {
         ArrayList<String[]> busList = readBus();
         ContentValues contentValues = new ContentValues();
-        for(int i=0; i<busList.size(); i++){
-            if(busList.get(i)[0].equals(Integer.toString(content5))){
+        for (int i = 0; i < busList.size(); i++) {
+            if (busList.get(i)[0].equals(Integer.toString(content5))) {
                 contentValues.put(SCHEDULE_TIME_STARTING, content1);
                 contentValues.put(SCHEDULE_TIME_ENDING, content2);
                 contentValues.put(SCHEDULE_DATE, content3);
@@ -167,14 +162,13 @@ public class SQLiteAdapter {
         return false;
     }
 
-    public boolean insertBookingTable(String content1, String content2, String content3, String content4, int content5, int content6)
-    {
+    public boolean insertBookingTable(String content1, String content2, String content3, String content4, int content5, int content6) {
         ArrayList<String[]> scheduleList = readSchedule();
         ArrayList<String[]> userList = readUser();
         ContentValues contentValues = new ContentValues();
-        for(int i=0; i<scheduleList.size(); i++){
-            if(scheduleList.get(i)[0].equals(Integer.toString(content6))){
-                for(int j=0; j<userList.size(); j++) {
+        for (int i = 0; i < scheduleList.size(); i++) {
+            if (scheduleList.get(i)[0].equals(Integer.toString(content6))) {
+                for (int j = 0; j < userList.size(); j++) {
                     if (userList.get(j)[0].equals(Integer.toString(content5))) {
                         //to write the content to the column of KEY_CONTENT
                         contentValues.put(BOOKING_DATE, content1);
@@ -192,14 +186,13 @@ public class SQLiteAdapter {
         return false;
     }
 
-//------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------
     //READ DATA
-    public ArrayList<String[]> readUser()
-    {
-        String [] columns = new String[] {"userID", USER_NAME, USER_EMAIL, USER_PASSWORD, USER_POINT, USER_CATEGORY};
+    public ArrayList<String[]> readUser() {
+        String[] columns = new String[]{"userID", USER_NAME, USER_EMAIL, USER_PASSWORD, USER_POINT, USER_CATEGORY};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(USER_TABLE, columns,
-                null, null, null, null, null) ;
+                null, null, null, null, null);
 
         ArrayList<String[]> resultList = new ArrayList<>();
 
@@ -210,18 +203,17 @@ public class SQLiteAdapter {
         int index_CONTENT_4 = cursor.getColumnIndex(USER_POINT);
         int index_CONTENT_5 = cursor.getColumnIndex(USER_CATEGORY);
 
-        int count =0;
+        int count = 0;
         //it will read all the data until finish
-        for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
-        {
-            if(count>0){
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+            if (count > 0) {
                 String[] resultArray = new String[6];
-                resultArray[0]=cursor.getString(index_CONTENT);
-                resultArray[1]=cursor.getString(index_CONTENT_1);
-                resultArray[2]=cursor.getString(index_CONTENT_2);
-                resultArray[3]=cursor.getString(index_CONTENT_3);
-                resultArray[4]=cursor.getString(index_CONTENT_4);
-                resultArray[5]=cursor.getString(index_CONTENT_5);
+                resultArray[0] = cursor.getString(index_CONTENT);
+                resultArray[1] = cursor.getString(index_CONTENT_1);
+                resultArray[2] = cursor.getString(index_CONTENT_2);
+                resultArray[3] = cursor.getString(index_CONTENT_3);
+                resultArray[4] = cursor.getString(index_CONTENT_4);
+                resultArray[5] = cursor.getString(index_CONTENT_5);
                 resultList.add(resultArray);
             }
             count++;
@@ -229,13 +221,12 @@ public class SQLiteAdapter {
         return resultList;
     }
 
-    public ArrayList<String[]> readUserByCondition(String condition, String conditionValue)
-    {
-        String [] columns = new String[] {"userID", USER_NAME, USER_EMAIL, USER_PASSWORD, USER_POINT, USER_CATEGORY};
+    public ArrayList<String[]> readUserByCondition(String condition, String conditionValue) {
+        String[] columns = new String[]{"userID", USER_NAME, USER_EMAIL, USER_PASSWORD, USER_POINT, USER_CATEGORY};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(USER_TABLE, columns,
-                condition+"=?", new String[]{conditionValue}, null, null,
-                USER_NAME +" ASC") ;
+                condition + "=?", new String[]{conditionValue}, null, null,
+                USER_NAME + " ASC");
 
         ArrayList<String[]> resultList = new ArrayList<>();
 
@@ -247,15 +238,14 @@ public class SQLiteAdapter {
         int index_CONTENT_5 = cursor.getColumnIndex(USER_CATEGORY);
 
         //it will read all the data until finish
-        for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
-        {
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
             String[] resultArray = new String[6];
-            resultArray[0]=cursor.getString(index_CONTENT);
-            resultArray[1]=cursor.getString(index_CONTENT_1);
-            resultArray[2]=cursor.getString(index_CONTENT_2);
-            resultArray[3]=cursor.getString(index_CONTENT_3);
-            resultArray[4]=cursor.getString(index_CONTENT_4);
-            resultArray[5]=cursor.getString(index_CONTENT_5);
+            resultArray[0] = cursor.getString(index_CONTENT);
+            resultArray[1] = cursor.getString(index_CONTENT_1);
+            resultArray[2] = cursor.getString(index_CONTENT_2);
+            resultArray[3] = cursor.getString(index_CONTENT_3);
+            resultArray[4] = cursor.getString(index_CONTENT_4);
+            resultArray[5] = cursor.getString(index_CONTENT_5);
             resultList.add(resultArray);
 
         }
@@ -263,12 +253,11 @@ public class SQLiteAdapter {
         return resultList;
     }
 
-    public ArrayList<String[]> readBus()
-    {
-        String [] columns = new String[] {"busID", BUS_PLATE_NO, BUS_CURRENT_STOP, BUS_CURRENT_STOP_TIME, BUS_STARTING_PLACE, BUS_ENDING_PLACE};
+    public ArrayList<String[]> readBus() {
+        String[] columns = new String[]{"busID", BUS_PLATE_NO, BUS_CURRENT_STOP, BUS_CURRENT_STOP_TIME, BUS_STARTING_PLACE, BUS_ENDING_PLACE};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(BUS_TABLE, columns,
-                null, null, null, null, null) ;
+                null, null, null, null, null);
 
         ArrayList<String[]> resultList = new ArrayList<>();
 
@@ -279,18 +268,17 @@ public class SQLiteAdapter {
         int index_CONTENT_4 = cursor.getColumnIndex(BUS_STARTING_PLACE);
         int index_CONTENT_5 = cursor.getColumnIndex(BUS_ENDING_PLACE);
 
-        int count =0;
+        int count = 0;
         //it will read all the data until finish
-        for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
-        {
-            if(count>0){
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+            if (count > 0) {
                 String[] resultArray = new String[6];
-                resultArray[0]=cursor.getString(index_CONTENT);
-                resultArray[1]=cursor.getString(index_CONTENT_1);
-                resultArray[2]=cursor.getString(index_CONTENT_2);
-                resultArray[3]=cursor.getString(index_CONTENT_3);
-                resultArray[4]=cursor.getString(index_CONTENT_4);
-                resultArray[5]=cursor.getString(index_CONTENT_5);
+                resultArray[0] = cursor.getString(index_CONTENT);
+                resultArray[1] = cursor.getString(index_CONTENT_1);
+                resultArray[2] = cursor.getString(index_CONTENT_2);
+                resultArray[3] = cursor.getString(index_CONTENT_3);
+                resultArray[4] = cursor.getString(index_CONTENT_4);
+                resultArray[5] = cursor.getString(index_CONTENT_5);
                 resultList.add(resultArray);
             }
             count++;
@@ -299,13 +287,12 @@ public class SQLiteAdapter {
         return resultList;
     }
 
-    public ArrayList<String[]> readBusByCondition(String condition, String conditionValue)
-    {
-        String [] columns = new String[] {"busID", BUS_PLATE_NO, BUS_CURRENT_STOP, BUS_CURRENT_STOP_TIME, BUS_STARTING_PLACE, BUS_ENDING_PLACE};
+    public ArrayList<String[]> readBusByCondition(String condition, String conditionValue) {
+        String[] columns = new String[]{"busID", BUS_PLATE_NO, BUS_CURRENT_STOP, BUS_CURRENT_STOP_TIME, BUS_STARTING_PLACE, BUS_ENDING_PLACE};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(BUS_TABLE, columns,
-                condition+"=?", new String[]{conditionValue}, null, null,
-                BUS_PLATE_NO +" ASC") ;
+                condition + "=?", new String[]{conditionValue}, null, null,
+                BUS_PLATE_NO + " ASC");
 
         ArrayList<String[]> resultList = new ArrayList<>();
 
@@ -317,15 +304,14 @@ public class SQLiteAdapter {
         int index_CONTENT_5 = cursor.getColumnIndex(BUS_ENDING_PLACE);
 
         //it will read all the data until finish
-        for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
-        {
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
             String[] resultArray = new String[6];
-            resultArray[0]=cursor.getString(index_CONTENT);
-            resultArray[1]=cursor.getString(index_CONTENT_1);
-            resultArray[2]=cursor.getString(index_CONTENT_2);
-            resultArray[3]=cursor.getString(index_CONTENT_3);
-            resultArray[4]=cursor.getString(index_CONTENT_4);
-            resultArray[5]=cursor.getString(index_CONTENT_5);
+            resultArray[0] = cursor.getString(index_CONTENT);
+            resultArray[1] = cursor.getString(index_CONTENT_1);
+            resultArray[2] = cursor.getString(index_CONTENT_2);
+            resultArray[3] = cursor.getString(index_CONTENT_3);
+            resultArray[4] = cursor.getString(index_CONTENT_4);
+            resultArray[5] = cursor.getString(index_CONTENT_5);
             resultList.add(resultArray);
 
         }
@@ -333,12 +319,11 @@ public class SQLiteAdapter {
         return resultList;
     }
 
-    public ArrayList<String[]> readSchedule()
-    {
-        String [] columns = new String[] {"scheduleID", SCHEDULE_TIME_STARTING, SCHEDULE_TIME_ENDING, SCHEDULE_DATE, SCHEDULE_SEAT_AVAILABLE, "busID"};
+    public ArrayList<String[]> readSchedule() {
+        String[] columns = new String[]{"scheduleID", SCHEDULE_TIME_STARTING, SCHEDULE_TIME_ENDING, SCHEDULE_DATE, SCHEDULE_SEAT_AVAILABLE, "busID"};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(SCHEDULE_TABLE, columns,
-                null, null, null, null, null) ;
+                null, null, null, null, null);
 
         ArrayList<String[]> resultList = new ArrayList<>();
 
@@ -349,18 +334,17 @@ public class SQLiteAdapter {
         int index_CONTENT_4 = cursor.getColumnIndex(SCHEDULE_SEAT_AVAILABLE);
         int index_CONTENT_5 = cursor.getColumnIndex("busID");
 
-        int count =0;
+        int count = 0;
         //it will read all the data until finish
-        for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
-        {
-            if(count>0) {
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+            if (count > 0) {
                 String[] resultArray = new String[6];
-                resultArray[0]=cursor.getString(index_CONTENT);
-                resultArray[1]=cursor.getString(index_CONTENT_1);
-                resultArray[2]=cursor.getString(index_CONTENT_2);
-                resultArray[3]=cursor.getString(index_CONTENT_3);
-                resultArray[4]=cursor.getString(index_CONTENT_4);
-                resultArray[5]=cursor.getString(index_CONTENT_5);
+                resultArray[0] = cursor.getString(index_CONTENT);
+                resultArray[1] = cursor.getString(index_CONTENT_1);
+                resultArray[2] = cursor.getString(index_CONTENT_2);
+                resultArray[3] = cursor.getString(index_CONTENT_3);
+                resultArray[4] = cursor.getString(index_CONTENT_4);
+                resultArray[5] = cursor.getString(index_CONTENT_5);
                 resultList.add(resultArray);
             }
             count++;
@@ -368,13 +352,12 @@ public class SQLiteAdapter {
         return resultList;
     }
 
-    public ArrayList<String[]> readScheduleByCondition(String condition, String conditionValue)
-    {
-        String [] columns = new String[] {"scheduleID", SCHEDULE_TIME_STARTING, SCHEDULE_TIME_ENDING, SCHEDULE_DATE, SCHEDULE_SEAT_AVAILABLE, "busID"};
+    public ArrayList<String[]> readScheduleByCondition(String condition, String conditionValue) {
+        String[] columns = new String[]{"scheduleID", SCHEDULE_TIME_STARTING, SCHEDULE_TIME_ENDING, SCHEDULE_DATE, SCHEDULE_SEAT_AVAILABLE, "busID"};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(SCHEDULE_TABLE, columns,
-                condition+"=?", new String[]{conditionValue}, null, null,
-                SCHEDULE_TIME_STARTING +" ASC") ;
+                condition + "=?", new String[]{conditionValue}, null, null,
+                SCHEDULE_TIME_STARTING + " ASC");
 
         ArrayList<String[]> resultList = new ArrayList<>();
 
@@ -386,26 +369,24 @@ public class SQLiteAdapter {
         int index_CONTENT_5 = cursor.getColumnIndex("busID");
 
         //it will read all the data until finish
-        for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
-        {
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
             String[] resultArray = new String[6];
-            resultArray[0]=cursor.getString(index_CONTENT);
-            resultArray[1]=cursor.getString(index_CONTENT_1);
-            resultArray[2]=cursor.getString(index_CONTENT_2);
-            resultArray[3]=cursor.getString(index_CONTENT_3);
-            resultArray[4]=cursor.getString(index_CONTENT_4);
-            resultArray[5]=cursor.getString(index_CONTENT_5);
+            resultArray[0] = cursor.getString(index_CONTENT);
+            resultArray[1] = cursor.getString(index_CONTENT_1);
+            resultArray[2] = cursor.getString(index_CONTENT_2);
+            resultArray[3] = cursor.getString(index_CONTENT_3);
+            resultArray[4] = cursor.getString(index_CONTENT_4);
+            resultArray[5] = cursor.getString(index_CONTENT_5);
             resultList.add(resultArray);
         }
         return resultList;
     }
 
-    public ArrayList<String[]> readBooking()
-    {
-        String [] columns = new String[] {"bookingID", BOOKING_DATE, BOOKING_PICKUP, BOOKING_DROPOFF, BOOKING_STATUS, "userID", "scheduleID"};
+    public ArrayList<String[]> readBooking() {
+        String[] columns = new String[]{"bookingID", BOOKING_DATE, BOOKING_PICKUP, BOOKING_DROPOFF, BOOKING_STATUS, "userID", "scheduleID"};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(BOOKING_TABLE, columns,
-                null, null, null, null, null) ;
+                null, null, null, null, null);
 
         ArrayList<String[]> resultList = new ArrayList<>();
 
@@ -417,19 +398,18 @@ public class SQLiteAdapter {
         int index_CONTENT_5 = cursor.getColumnIndex("userID");
         int index_CONTENT_6 = cursor.getColumnIndex("scheduleID");
 
-        int count =0;
+        int count = 0;
         //it will read all the data until finish
-        for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
-        {
-            if(count>0){
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+            if (count > 0) {
                 String[] resultArray = new String[7];
-                resultArray[0]=cursor.getString(index_CONTENT);
-                resultArray[1]=cursor.getString(index_CONTENT_1);
-                resultArray[2]=cursor.getString(index_CONTENT_2);
-                resultArray[3]=cursor.getString(index_CONTENT_3);
-                resultArray[4]=cursor.getString(index_CONTENT_4);
-                resultArray[5]=cursor.getString(index_CONTENT_5);
-                resultArray[6]=cursor.getString(index_CONTENT_6);
+                resultArray[0] = cursor.getString(index_CONTENT);
+                resultArray[1] = cursor.getString(index_CONTENT_1);
+                resultArray[2] = cursor.getString(index_CONTENT_2);
+                resultArray[3] = cursor.getString(index_CONTENT_3);
+                resultArray[4] = cursor.getString(index_CONTENT_4);
+                resultArray[5] = cursor.getString(index_CONTENT_5);
+                resultArray[6] = cursor.getString(index_CONTENT_6);
                 resultList.add(resultArray);
             }
             count++;
@@ -437,13 +417,12 @@ public class SQLiteAdapter {
         return resultList;
     }
 
-    public ArrayList<String[]> readBookingByCondition(String condition, String conditionValue)
-    {
-        String [] columns = new String[] {"bookingID", BOOKING_DATE, BOOKING_PICKUP, BOOKING_DROPOFF, BOOKING_STATUS, "userID", "scheduleID"};
+    public ArrayList<String[]> readBookingByCondition(String condition, String conditionValue) {
+        String[] columns = new String[]{"bookingID", BOOKING_DATE, BOOKING_PICKUP, BOOKING_DROPOFF, BOOKING_STATUS, "userID", "scheduleID"};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(BOOKING_TABLE, columns,
-                condition+"=?", new String[]{conditionValue}, null, null,
-                BOOKING_DATE +" ASC") ;
+                condition + "=?", new String[]{conditionValue}, null, null,
+                BOOKING_DATE + " ASC");
 
         ArrayList<String[]> resultList = new ArrayList<>();
 
@@ -456,22 +435,21 @@ public class SQLiteAdapter {
         int index_CONTENT_6 = cursor.getColumnIndex("scheduleID");
 
         //it will read all the data until finish
-        for(cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext())
-        {
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
             String[] resultArray = new String[7];
-            resultArray[0]=cursor.getString(index_CONTENT);
-            resultArray[1]=cursor.getString(index_CONTENT_1);
-            resultArray[2]=cursor.getString(index_CONTENT_2);
-            resultArray[3]=cursor.getString(index_CONTENT_3);
-            resultArray[4]=cursor.getString(index_CONTENT_4);
-            resultArray[5]=cursor.getString(index_CONTENT_5);
-            resultArray[6]=cursor.getString(index_CONTENT_6);
+            resultArray[0] = cursor.getString(index_CONTENT);
+            resultArray[1] = cursor.getString(index_CONTENT_1);
+            resultArray[2] = cursor.getString(index_CONTENT_2);
+            resultArray[3] = cursor.getString(index_CONTENT_3);
+            resultArray[4] = cursor.getString(index_CONTENT_4);
+            resultArray[5] = cursor.getString(index_CONTENT_5);
+            resultArray[6] = cursor.getString(index_CONTENT_6);
             resultList.add(resultArray);
         }
         return resultList;
     }
 
-//------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------
     //UPDATE DB
     // Update the schedule table based on certain conditions
     public boolean updateScheduleTableByInt(String updateColumn, int updateValues, String conditionColumn, String conditionValue) {
@@ -490,22 +468,35 @@ public class SQLiteAdapter {
         return rowsAffected > 0;
     }
 
+    //------------------------------------------------------------------------------------------------
+    //check
+    public boolean isEmailExists(String email) {
+        String[] columns = {USER_EMAIL};
+        String selection = USER_EMAIL + "=?";
+        String[] selectionArgs = {email};
 
-//------------------------------------------------------------------------------------------------
+        Cursor cursor = sqLiteDatabase.query(USER_TABLE, columns, selection, selectionArgs, null, null, null);
+        int count = cursor.getCount();
+        cursor.close();
+
+        return count > 0;
+    }
+
+
+    //------------------------------------------------------------------------------------------------
     //close the database
-    public void close()
-    {
+    public void close() {
         sqLiteHelper.close();
     }
 
     //reduce the redundancy
-    public int deleteAll()
-    {
-        sqLiteDatabase.delete(BOOKING_TABLE,null, null);
-        sqLiteDatabase.delete(SCHEDULE_TABLE,null, null);
-        sqLiteDatabase.delete(USER_TABLE,null, null);
-        sqLiteDatabase.delete(BUS_TABLE,null, null);
-        sqLiteDatabase= sqLiteHelper.getWritableDatabase();;
+    public int deleteAll() {
+        sqLiteDatabase.delete(BOOKING_TABLE, null, null);
+        sqLiteDatabase.delete(SCHEDULE_TABLE, null, null);
+        sqLiteDatabase.delete(USER_TABLE, null, null);
+        sqLiteDatabase.delete(BUS_TABLE, null, null);
+        sqLiteDatabase = sqLiteHelper.getWritableDatabase();
+        ;
         sqLiteDatabase.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + BOOKING_TABLE + "'");
         sqLiteDatabase.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + SCHEDULE_TABLE + "'");
         sqLiteDatabase.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + USER_TABLE + "'");
@@ -514,11 +505,10 @@ public class SQLiteAdapter {
         return 1;
     }
 
-//------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------
     //DB INITIALIZATION
     //SQLiteOpenHelper: A helper class to manage database creation and version management
-    public class SQLiteHelper extends SQLiteOpenHelper
-    {
+    public class SQLiteHelper extends SQLiteOpenHelper {
 
         public SQLiteHelper(@Nullable Context context, @Nullable String name,
                             @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -553,10 +543,11 @@ public class SQLiteAdapter {
                 db.execSQL(SCRIPT_CREATE_SCHEDULE_TABLE);
                 db.execSQL(SCRIPT_CREATE_BOOKING_TABLE);
 
-                initializeTableSequence();
+                 initializeTableSequence();
             }
         }
     }
+
     public void initializeTableSequence() {
         ContentValues values = new ContentValues();
         values.put("userID", 10000);

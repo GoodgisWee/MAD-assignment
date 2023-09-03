@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import my.edu.utar.API.Weather;
+import my.edu.utar.profile.userProfilePage;
 
 public class BookingPage extends AppCompatActivity implements Weather.WeatherCallback {
 
@@ -75,6 +76,15 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BookingPage.this, MyTicketActivity.class);
+                intent.putExtra("uid",uid);
+                startActivity(intent);
+            }
+        });
+
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BookingPage.this, my.edu.utar.profile.userProfilePage.class);
                 intent.putExtra("uid",uid);
                 startActivity(intent);
             }

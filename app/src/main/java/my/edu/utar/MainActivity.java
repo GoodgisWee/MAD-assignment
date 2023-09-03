@@ -3,6 +3,11 @@ package my.edu.utar;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     //create a status code (can be any unique integer)
     private static final int RC_SIGN_IN = 123;
     private EditText loginID, password;
+    private  TextView signup;
     private Button loginButton;
     private String passwordStr, loginIDStr;
     @Override
@@ -61,7 +68,23 @@ public class MainActivity extends AppCompatActivity {
         //Handle regular sign in logic
         loginID = findViewById(R.id.loginID);
         password = findViewById(R.id.password);
-        Button loginButton = findViewById(R.id.loginButton);
+        loginButton = findViewById(R.id.loginButton);
+        signup = findViewById(R.id.signUpText);
+
+        String signupText = "Don't have a account yet? Register Here";
+
+        SpannableString ss = new SpannableString(signupText);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View view) {
+                Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+                startActivity(intent);
+            }
+        };
+        ss.setSpan(clickableSpan,26, 39, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        signup.setText(ss);
+        signup.setMovementMethod(LinkMovementMethod.getInstance());
+
 
         //Connect to database, then compare string from user input to the database
         // Scenario #1 : user click loginButton, write the details into the database

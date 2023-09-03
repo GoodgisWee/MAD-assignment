@@ -12,59 +12,99 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Welcome"
+        android:text="Register Here"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="30dp"
         android:layout_marginTop="20dp"/>
 
+
     <EditText
-        android:id="@+id/loginID"
+        android:id="@+id/emailText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="105dp"
         android:layout_marginTop="96dp"
-        android:hint="Email/ Username"
+        android:hint="Email Address"
         android:inputType="textEmailAddress"
         android:minHeight="48dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="160dp"
+        android:text="Name "
+        android:textColor="@color/black"
+        android:textSize="22dp" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/emailText"
+        android:layout_marginLeft="105dp"
+        android:layout_marginTop="8dp"
+        android:hint="Your Full Name"
+        android:inputType="textPersonName"
+        android:minHeight="48dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="216dp"
+        android:text="Password "
+        android:textColor="@color/black"
+        android:textSize="22dp" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/loginID"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/username"
+        android:layout_marginLeft="105dp"
         android:layout_marginTop="8dp"
         android:hint="@string/prompt_password"
         android:inputType="textPassword"
         android:minHeight="48dp" />
 
-    <Button
-        android:id="@+id/loginButton"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="105dp"
+        android:text="Email "
+        android:textColor="@color/black"
+        android:textSize="22dp" />
+
+    <EditText
+        android:id="@+id/password2"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/password"
+        android:layout_marginLeft="105dp"
+        android:layout_marginTop="8dp"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        android:minHeight="48dp" />
+
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/password2"
         android:layout_centerHorizontal="true"
         android:layout_gravity="start"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="20dp"
-        android:text="Login" />
+        android:text="Register" />
 
-    <TextView
-        android:id="@+id/signUpText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/loginButton"
-        android:layout_centerHorizontal="true"
-        android:text="Don't have a account yet? Register Here"
-        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/orLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/signUpText"
-        android:layout_marginTop="20dp"
+        android:layout_below="@+id/registerButton"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <View
@@ -101,7 +141,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/orLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="5dp" />
 
     <ImageView
         android:id="@+id/logo"
@@ -109,17 +149,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/sign_in_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
         app:srcCompat="@drawable/logo" />
-
-    <TextView
-        android:id="@+id/logoText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true"
-        android:text="Wheel.io"
-        android:textSize="28dp"
-        android:textStyle="bold" />
 
 </RelativeLayout>

@@ -28,6 +28,8 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import my.edu.utar.profile.userProfilePage;
+
 public class MyTicketActivity extends AppCompatActivity {
 
     private SQLiteAdapter mySQLiteAdapter;
@@ -70,6 +72,15 @@ public class MyTicketActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MyTicketActivity.this, BookingPage.class);
+                intent.putExtra("uid",uid);
+                startActivity(intent);
+            }
+        });
+
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MyTicketActivity.this, my.edu.utar.profile.userProfilePage.class);
                 intent.putExtra("uid",uid);
                 startActivity(intent);
             }
