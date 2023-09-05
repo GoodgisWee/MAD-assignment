@@ -1,15 +1,17 @@
 package my.edu.utar.profile;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,9 +21,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import my.edu.utar.BookingPage;
-import my.edu.utar.MainActivity;
-import my.edu.utar.MyTicketActivity;
+import javax.xml.parsers.SAXParser;
+
+import my.edu.utar.BookingPage.BookingPage;
+import my.edu.utar.login.MainActivity;
 import my.edu.utar.R;
 import my.edu.utar.SQLiteAdapter;
 
@@ -33,6 +36,10 @@ public class userProfilePage extends AppCompatActivity {
     private static final int REQUEST_CODE_CAPTURE_IMAGE = 1002;
     private ImageButton homeBtn, profileBtn, bookingBtn;
     private ArrayList<String[]> userListByCondition;
+    private Spinner busLocation;
+    private Button updateButton;
+    private ArrayList<String[]> bus;
+    private LinearLayout busLocationLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,21 +63,58 @@ public class userProfilePage extends AppCompatActivity {
         aboutTextView = findViewById(R.id.about);
         logoutTextView = findViewById(R.id.logout);
         aboutTextView = findViewById(R.id.about);
+        busLocation = findViewById(R.id.busLocation);
+        updateButton = findViewById(R.id.updateButton);
+        busLocationLayout = findViewById(R.id.busLocationLayout);
 
-        // Fetch user data from your backend or database
-        // String userName = mySQLiteAdapter.USER_NAME;  // Replace with actual user data
-        String userName = uid;
-
-        mySQLiteAdapter.openToRead();
+        mySQLiteAdapter.openToWrite();
         userListByCondition = mySQLiteAdapter.readUserByCondition("userID", uid);
+        bus = mySQLiteAdapter.readBusByCondition("userID", uid);
+        mySQLiteAdapter.close();
+
+        //output all user details
         if(userListByCondition.size()>0){
-            uidTextView.setText(uid);
             nameTextView.setText(userListByCondition.get(0)[1]);
+            uidTextView.setText(uid);
             pointsTextView.setText(userListByCondition.get(0)[4]);
             emailTextView.setText(userListByCondition.get(0)[2]);
         } else {
             Toast.makeText(this, "Error, user doesn't exist", Toast.LENGTH_SHORT).show();
         }
+
+        //driver can update bus location
+        if(userListByCondition.get(0)[5].equals("driver")){
+            //update name
+            nameTextView.setText(userListByCondition.get(0)[1]+" (driver)");
+            //busLocation Spinner
+            String[] locationItems = {bus.get(0)[4], bus.get(0)[5]};
+            ArrayList<String> itemsWithoutPickUp = new ArrayList<>();
+            for (String item : locationItems) {
+                if (!item.equals(bus.get(0)[2])) {
+                    itemsWithoutPickUp.add(item);
+                }
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_spinner_item,
+                    itemsWithoutPickUp
+            );
+            busLocation.setAdapter(adapter);
+            int position = adapter.getPosition(bus.get(0)[2]);
+            busLocation.setSelection(position);
+            busLocationLayout.setVisibility(View.VISIBLE);
+        }
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mySQLiteAdapter.openToWrite();
+                mySQLiteAdapter.updateBusLocation(bus.get(0)[0], busLocation.getSelectedItem().toString());
+                mySQLiteAdapter.close();
+
+                Toast.makeText(userProfilePage.this, "Successfully update the bus location",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //change profile picture
         profilePictureImageView.setOnClickListener(new View.OnClickListener() {
@@ -125,16 +169,16 @@ public class userProfilePage extends AppCompatActivity {
         bookingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(userProfilePage.this, MyTicketActivity.class);
+                Intent intent = new Intent(userProfilePage.this, my.edu.utar.BookingHistory.MyTicketActivity.class);
                 intent.putExtra("uid",uid);
                 startActivity(intent);
             }
         });
 
-        bookingBtn.setOnClickListener(new View.OnClickListener() {
+        homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(userProfilePage.this, BookingPage.class);
+                Intent intent = new Intent(userProfilePage.this, my.edu.utar.BookingPage.BookingPage.class);
                 intent.putExtra("uid",uid);
                 startActivity(intent);
             }

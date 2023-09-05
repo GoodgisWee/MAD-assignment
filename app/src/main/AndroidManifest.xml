@@ -14,32 +14,31 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".SignupActivity"
+            android:name=".login.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".login.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".MyTicketActivity"
+            android:name=".BookingHistory.MyTicketActivity"
             android:exported="false" />
         <activity
             android:name=".profile.userProfilePage"
             android:exported="false" />
         <activity
-            android:name=".model.BookingPageModel"
+            android:name=".BookingPage.BookingPageModel"
             android:exported="false" />
         <activity
-            android:name=".BookingPage"
-            android:exported="false" />
-        <activity
-            android:name=".SplashScreenActivity"
+            android:name=".BookingPage.BookingPage"
             android:exported="false" />
         <activity
             android:name=".API.GoogleMaps"
+            android:exported="false" />
+        <activity
+            android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

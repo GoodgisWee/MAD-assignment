@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,107 +10,200 @@
     android:clickable="true"
     android:focusable="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+        <!-- Date -->
+        <TextView
+            android:id="@+id/ticketDateTextView"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Date: "
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Date: "
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:textColor="@color/black"/>
+        <Button
+            android:id="@+id/trackBusButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Track Bus"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/ticketDateTextView"/>
 
-            <TextView
-                android:id="@+id/ticketDateTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ticket Date"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/pickupTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pickup Location"
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ticketDateTextView" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+        <TextView
+            android:id="@+id/dropoffTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dropoff Location"
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pickupTextView" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Depart: "
-                android:textSize="16dp"
-                android:textStyle="bold"
-                android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/statusTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dropoffTextView" />
 
-            <TextView
-                android:id="@+id/pickupTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pickup Location"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                />
-        </LinearLayout>
+        <!-- Additional Information -->
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/additional_info_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:constraint_referenced_ids="bus_plate_text,booking_id_text,schedule_id_text,schedule_time_start_text,schedule_time_end_text,user_name_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/statusTextView"
+            />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+        <!-- Bus Plate -->
+        <TextView
+            android:id="@+id/bus_plate_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bus Plate: "
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/additional_info_group" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Destination: "
-                android:textSize="16dp"
-                android:textStyle="bold"
-                android:textColor="@color/black"/>
+        <!-- Schedule ID -->
+        <TextView
+            android:id="@+id/booking_id_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Booking ID: "
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bus_plate_text" />
 
-            <TextView
-                android:id="@+id/dropoffTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="Dropoff Location"
-                android:textSize="14sp"
-                />
+        <!-- Schedule ID -->
+        <TextView
+            android:id="@+id/schedule_id_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Schedule ID: "
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/booking_id_text" />
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/schedule_time_start_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Schedule Start: "
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/schedule_id_text" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+        <TextView
+            android:id="@+id/schedule_time_end_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Schedule ETA: "
+            android:textColor="@color/black"
+            android:textSize="17dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/schedule_time_start_text" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Status: "
-                android:textSize="16dp"
-                android:textStyle="bold"
-                android:textColor="@color/black"/>
+        <!-- User Name -->
+        <TextView
+            android:id="@+id/user_name_text"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="User Name: "
+            android:textSize="17dp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/schedule_time_end_text" />
 
-            <TextView
-                android:id="@+id/statusTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="Status"
-                android:textSize="14sp"
-                />
+        <!-- Delete Button -->
+        <Button
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Delete"
+            app:layout_constraintStart_toStartOf="@id/user_name_text"
+            app:layout_constraintTop_toBottomOf="@id/user_name_text"
+            />
 
+        <!-- Refund Button -->
+        <Button
+            android:id="@+id/refund_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Refund"
+            app:layout_constraintStart_toEndOf="@id/user_name_text"
+            app:layout_constraintTop_toBottomOf="@id/user_name_text"
+            />
 
-        </LinearLayout>
+        <!-- Edit Button -->
+        <Button
+            android:id="@+id/edit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="Edit"
+            app:layout_constraintStart_toStartOf="@id/user_name_text"
+            app:layout_constraintTop_toBottomOf="@id/user_name_text"
+            />
 
-    </LinearLayout>
+        <!-- EditText for Editing Username (Initially hidden) -->
+        <EditText
+            android:id="@+id/edit_username_text"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="Edit Username"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/user_name_text"
+            android:visibility="gone" />
+
+        <!-- Save Button for Username Edit (Initially hidden) -->
+        <Button
+            android:id="@+id/cancel_username_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            app:layout_constraintStart_toStartOf="@+id/edit_username_text"
+            app:layout_constraintTop_toBottomOf="@+id/edit_username_text"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/save_username_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            app:layout_constraintStart_toEndOf="@id/edit_username_text"
+            app:layout_constraintTop_toBottomOf="@id/edit_username_text"
+            android:visibility="gone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

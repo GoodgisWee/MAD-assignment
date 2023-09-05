@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BookingPage">
+    tools:context=".BookingPage.BookingPage">
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp"
@@ -138,7 +138,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="#ECECEC">
 
             <LinearLayout
@@ -172,7 +172,7 @@
                         android:layout_centerHorizontal="true"
                         android:text="Weather Main"
                         android:textColor="@android:color/black"
-                        android:textSize="18dp" />
+                        android:textSize="17dp" />
 
                     <TextView
                         android:id="@+id/weatherDesc"
@@ -192,8 +192,7 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:background="#FFFFFF"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="72dp">
+                android:layout_alignParentBottom="true">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"

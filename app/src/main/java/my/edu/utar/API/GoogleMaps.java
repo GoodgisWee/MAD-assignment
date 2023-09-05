@@ -3,9 +3,15 @@ package my.edu.utar.API;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -179,13 +185,36 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
     public boolean onMarkerClick(Marker marker) {
         // Check if the clicked marker is the bus marker
         if (marker.getTag() != null) {
-            //zoom out Button appear
-            zoomOutButton.setVisibility(View.VISIBLE);
-
             // Animate the camera to the bus marker's position
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 18.0f)); // Adjust the zoom level as needed
             return true; // Return true to indicate that the click event has been handled
         }
         return false; // Return false to indicate that the click event has not been handled
     }
+
+    public class MyLocationListener implements LocationListener {
+        @Override
+        public void onLocationChanged(Location location) {
+            // Handle location updates here
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            // Do something with the latitude and longitude
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            // Handle status changes if needed
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            // Called when the user enables the location provider (e.g., GPS)
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            // Called when the user disables the location provider
+        }
+    }
+
 }

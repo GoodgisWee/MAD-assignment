@@ -169,14 +169,47 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:text="Logout"
                 android:textColor="#000000" />
+
+            <LinearLayout
+                android:id="@+id/busLocationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/busLocationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="Bus Location"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    />
+
+                <Spinner
+                    android:id="@+id/busLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/updateButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_button"
+                    android:text="Update" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/bottomNavLayout"
             android:layout_width="match_parent"
-            android:layout_height="142dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/detailsLayout"
-            android:layout_marginTop="130dp"
             android:background="#ECECEC">
 
             <LinearLayout
@@ -184,7 +217,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="72dp"
                 android:background="#FFFFFF"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">

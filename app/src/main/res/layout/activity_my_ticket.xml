@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyTicketActivity">
+    tools:context=".BookingHistory.MyTicketActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
@@ -62,7 +62,7 @@
         <RelativeLayout
             android:id="@+id/bottomNavLayout"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/noTicketsTextView"
             android:background="#ECECEC">
 
@@ -71,7 +71,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="72dp"
                 android:background="#FFFFFF"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">

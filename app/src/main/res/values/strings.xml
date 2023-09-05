@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Wheel.IO</string>
 
     <string-array name="location_items">
         <item>PickUp Point</item>

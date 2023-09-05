@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import my.edu.utar.login.MainActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -93,31 +93,33 @@ public class SplashScreenActivity extends AppCompatActivity {
         mySQLiteAdapter.deleteAll();
 
 
+        mySQLiteAdapter.insertUserTable("Goodgis123", "wee123@gmail.com", "goodgis123", 100, "driver");
+        mySQLiteAdapter.insertUserTable("Kuanchee123", "kuanchee123@gmail.com", "kuanchee123", 100, "driver");
+        mySQLiteAdapter.insertUserTable("Jielun123", "jielun123@gmail.com", "jielun123", 100, "driver");
         mySQLiteAdapter.insertUserTable("Ryan123", "ryan123@gmail.com", "ryan123", 100, "student");
         mySQLiteAdapter.insertUserTable("Nicholas123", "nicholas123@gmail.com", "nicholas123", 100, "student");
-        mySQLiteAdapter.insertUserTable("Goodgis123", "wee123@gmail.com", "goodgis123", 100, "driver");
 
         //bus to WestLake
-        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block N", "WestLake");
-        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block G", "WestLake");
-        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block D", "WestLake");
-        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "WestLake", "Block N");
-        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "WestLake", "Block G");
-        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "WestLake", "Block D");
+        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block N", "WestLake", "10001");
+        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block G", "WestLake", "10001");
+        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block D", "WestLake", "10001");
+        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "WestLake", "Block N", "10001");
+        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "WestLake", "Block G", "10001");
+        mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "WestLake", "Block D", "10001");
         //bus to Harvard
-        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Block N", "Harvard");
-        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Block G", "Harvard");
-        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Block D", "Harvard");
-        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Harvard", "Block N");
-        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Harvard", "Block G");
-        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Harvard", "Block D");
+        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Block N", "Harvard", "10002");
+        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Block G", "Harvard", "10002");
+        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Block D", "Harvard", "10002");
+        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Harvard", "Block N", "10002");
+        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Harvard", "Block G", "10002");
+        mySQLiteAdapter.insertBusTable("BTH 123", "Block G", "13:00:00", "Harvard", "Block D", "10002");
         //bus to Stanford
-        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Block N", "Stanford");
-        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Block G", "Stanford");
-        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Block D", "Stanford");
-        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Stanford", "Block N");
-        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Stanford", "Block G");
-        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Stanford", "Block D");
+        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Block N", "Stanford", "10003");
+        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Block G", "Stanford", "10003");
+        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Block D", "Stanford", "10003");
+        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Stanford", "Block N", "10003");
+        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Stanford", "Block G", "10003");
+        mySQLiteAdapter.insertBusTable("BTS 123", "Block G", "13:00:00", "Stanford", "Block D", "10003");
 
         //WestLake Bus Schedule
         mySQLiteAdapter.insertScheduleTable("09:00:00", "09:30:00", "30-08-2023", 30, 1001);
@@ -234,8 +236,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         mySQLiteAdapter.insertScheduleTable("18:05:00", "18:15:00", "30-08-2023", 30, 1017);
         mySQLiteAdapter.insertScheduleTable("18:10:00", "18:20:00", "30-08-2023", 30, 1018);
 
-        mySQLiteAdapter.insertBookingTable(formattedDate, "Harvard", "Block G", "past", 10002, 22);
-        mySQLiteAdapter.insertBookingTable(formattedDate, "Harvard", "Block N", "current", 10003, 23);
+        mySQLiteAdapter.insertBookingTable("2022-07-17", "Harvard", "Block G", "past", 10002, 22, "Young Lai Sien");
+
 
         mySQLiteAdapter.close();
 
