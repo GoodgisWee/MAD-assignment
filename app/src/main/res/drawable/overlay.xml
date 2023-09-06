@@ -1,0 +1,7 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/overlay">
+        <shape android:shape="rectangle">
+            <solid android:color="#80FFFFFF"/> <!-- Adjust the alpha (opacity) value as needed -->
+        </shape>
+    </item>
+</layer-list>

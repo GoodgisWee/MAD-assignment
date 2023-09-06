@@ -8,14 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.InputType;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -37,7 +34,7 @@ import java.util.List;
 import java.util.Locale;
 
 import my.edu.utar.R;
-import my.edu.utar.SQLiteAdapter;
+import my.edu.utar.Database.SQLiteAdapter;
 
 public class BookingPageModel extends AppCompatActivity implements ScheduleAdapter.OnBookClickListener {
 
@@ -206,6 +203,7 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
                                 Integer.parseInt(scheduleListByCondition.get(0)[4]) - pax, "scheduleID", scheduleItem.getScheduleId());
 
                         if (bookingSuccess) {
+                            mySQLiteAdapter.updateUserPoint(uid, Integer.parseInt(userList.get(0)[4])+5);
                             Toast.makeText(BookingPageModel.this, "Booking successful! Now redirecting you to booking page....",
                                     Toast.LENGTH_SHORT).show();
 
@@ -235,6 +233,7 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
                                     busID = scheduleListByCondition.get(0)[5];
                                     intent.putExtra("busID", busID);
                                     startActivity(intent);
+                                    finish();
                                 }
                             }, 3000); // 3000 milliseconds (3 seconds)
                         } else {
@@ -279,7 +278,7 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
                             formattedMonth = String.valueOf(monthOfYear);
                         }
                         if (dayOfMonth < 10) {
-                            formattedDay = String.format("%02d", dayOfMonth + 1);
+                            formattedDay = String.format("%02d", dayOfMonth);
                         } else {
                             formattedDay = String.valueOf(dayOfMonth);
                         }

@@ -17,7 +17,7 @@ public class Weather {
         void onWeatherDataFailed();
     }
 
-    private WeatherCallback callback;
+    public WeatherCallback callback;
 
     public Weather(WeatherCallback callback) {
         this.callback = callback;

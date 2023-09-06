@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import my.edu.utar.R;
-import my.edu.utar.SQLiteAdapter;
+import my.edu.utar.Database.SQLiteAdapter;
 
 public class PastTicketFragment extends Fragment {
 

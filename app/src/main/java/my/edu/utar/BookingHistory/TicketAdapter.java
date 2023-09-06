@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import my.edu.utar.R;
-import my.edu.utar.SQLiteAdapter;
+import my.edu.utar.Database.SQLiteAdapter;
 
 public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder> {
 
@@ -199,7 +199,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         // User clicked "Yes," so delete the ticket
-                                        mySQLiteAdapter.deleteBooking(ticketId);
+                                        mySQLiteAdapter.deleteBookingByCondition(ticketId);
 
                                         // Show a toast message indicating that the ticket has been deleted
                                         Toast.makeText(itemView.getContext(), "Ticket refunded. Your credit will be refunded in 3-5 working days", Toast.LENGTH_SHORT).show();
@@ -296,7 +296,7 @@ public class TicketAdapter extends RecyclerView.Adapter<TicketAdapter.ViewHolder
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             // User clicked "Yes," so delete the ticket
-                                            mySQLiteAdapter.deleteBooking(ticketId);
+                                            mySQLiteAdapter.deleteBookingByCondition(ticketId);
 
                                             // Show a toast message indicating that the ticket has been deleted
                                             Toast.makeText(itemView.getContext(), "PAST Ticket deleted", Toast.LENGTH_SHORT).show();

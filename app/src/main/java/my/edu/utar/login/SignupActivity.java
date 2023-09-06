@@ -17,7 +17,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import my.edu.utar.R;
-import my.edu.utar.SQLiteAdapter;
+import my.edu.utar.Database.SQLiteAdapter;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -103,6 +103,7 @@ public class SignupActivity extends AppCompatActivity {
                 // For example, navigate to the main activity
                 Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
                 /*Intent it = new Intent(getApplicationContext(), my.edu.utar.SplashScreenActivity.class);
 
                 // Create a PendingIntent to wrap the intent
@@ -120,7 +121,8 @@ public class SignupActivity extends AppCompatActivity {
                 // Notify using the NotificationManager
                 NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.notify(0, mBuilder.build());
-                startActivity(it);*/
+                startActivity(it);
+                finish();*/
             } else {
                 // Registration failed, handle the error
                 // Display an error message or toast

@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
+            android:name=".Database.DataInsertionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".profile.changePasswordPage"
+            android:exported="false" />
+        <activity
             android:name=".login.SignupActivity"
             android:exported="false" />
         <activity
@@ -39,6 +45,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -46,7 +53,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDX1vpW2EKvwBwLIMKphuiFoDdQmdCRAxg" />
-
     </application>
 
 </manifest>

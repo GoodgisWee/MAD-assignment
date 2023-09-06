@@ -1,5 +1,7 @@
 package my.edu.utar.BookingHistory;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 
 import my.edu.utar.BookingPage.BookingPage;
 import my.edu.utar.R;
-import my.edu.utar.SQLiteAdapter;
+import my.edu.utar.Database.SQLiteAdapter;
 
 public class MyTicketActivity extends AppCompatActivity {
 
@@ -73,9 +75,10 @@ public class MyTicketActivity extends AppCompatActivity {
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MyTicketActivity.this, BookingPage.class);
+                Intent intent = new Intent(MyTicketActivity.this, my.edu.utar.BookingPage.BookingPage.class);
                 intent.putExtra("uid",uid);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -85,6 +88,7 @@ public class MyTicketActivity extends AppCompatActivity {
                 Intent intent = new Intent(MyTicketActivity.this, my.edu.utar.profile.userProfilePage.class);
                 intent.putExtra("uid",uid);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -128,10 +132,6 @@ public class MyTicketActivity extends AppCompatActivity {
         };
         viewPager.setAdapter(fragmentPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
-
-        TextView noTicketsTextView = findViewById(R.id.noTicketsTextView);
-
     }
 
     private void updateFragmentsWithFilteredTickets(ArrayList<String[]> filteredTickets) {

@@ -1,7 +1,9 @@
 package my.edu.utar.BookingPage;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -27,7 +29,7 @@ import java.util.List;
 
 import my.edu.utar.API.Weather;
 import my.edu.utar.R;
-import my.edu.utar.SQLiteAdapter;
+import my.edu.utar.Database.SQLiteAdapter;
 
 public class BookingPage extends AppCompatActivity implements Weather.WeatherCallback {
 
@@ -42,7 +44,8 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
     private List<ScheduleItem> scheduleItemsList;
     private RecyclerView recyclerView;
     private ScheduleAdapter scheduleAdapter;
-    private EditText date, time, pax;
+    private EditText pax;
+    private TextView date, time;
     private ImageButton homeBtn, bookingBtn, profileBtn;
 
     @Override
@@ -58,8 +61,8 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
 
         pickupSpinner = findViewById(R.id.pickUp);
         dropoffSpinner = findViewById(R.id.dropOff);
-        date = findViewById(R.id.editTextDate);
-        time = findViewById(R.id.editTextTime);
+        date = findViewById(R.id.textViewDate);
+        time = findViewById(R.id.textViewTime);
         pax = findViewById(R.id.pax);
         searchBtn = findViewById(R.id.searchBtn);
 
@@ -75,6 +78,7 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
                 intent.putExtra("uid",uid);
                 intent.putExtra("busID",busID);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -84,6 +88,9 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
                 Intent intent = new Intent(BookingPage.this, my.edu.utar.profile.userProfilePage.class);
                 intent.putExtra("uid",uid);
                 startActivity(intent);
+                finish();
+
+
             }
         });
 
@@ -157,7 +164,7 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
                                     formattedMonth = String.valueOf(monthOfYear);
                                 }
                                 if (dayOfMonth < 10) {
-                                    formattedDay = String.format("%02d", dayOfMonth + 1);
+                                    formattedDay = String.format("%02d", dayOfMonth);
                                 } else {
                                     formattedDay = String.valueOf(dayOfMonth);
                                 }
@@ -254,40 +261,58 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
         TextView weatherDescTextView = findViewById(R.id.weatherDesc);
         ImageView weatherImageView = findViewById(R.id.weatherImage);
 
-        if(weatherMain.equals("Thunderstorm")){
-            weatherMainTextView.setText("OH NO! It's "+weatherMain+ " today");
-            weatherDescTextView.setText("It's "+weatherDesc+"\nPlease be prepare to get wet!!");
-            weatherImageView.setImageResource(R.drawable.thunderstorm);
-        }else if(weatherMain.equals("Rain")) {
-            weatherMainTextView.setText("NOOOO! It's "+weatherMain+ " today");
-            weatherDescTextView.setText("It's " + weatherDesc + "\nMake sure you had prepare an umbrella before going out");
-            weatherImageView.setImageResource(R.drawable.rainy);
-        }else if(weatherMain.equals("Snow")) {
-            weatherMainTextView.setText("Hurray! It's "+weatherMain+ " today");
-            weatherDescTextView.setText("It's " + weatherDesc + "\nFREEZEEEEE!!");
-            weatherImageView.setImageResource(R.drawable.snow);
-        }else if(weatherMain.equals("Clear")) {
-            weatherMainTextView.setText("WOAH! It's "+weatherMain+ " today");
-            weatherDescTextView.setText("It's " + weatherDesc + "\nWhat a great day for picnic!");
-            weatherImageView.setImageResource(R.drawable.clear);
-        }else if(weatherMain.equals("Clouds")) {
-            weatherMainTextView.setText("Yeah! It's "+weatherMain+ " today");
-            weatherDescTextView.setText("It's " + weatherDesc + "\nOhh, its picnic time!!");
-            weatherImageView.setImageResource(R.drawable.cloudy);
-        }else if(weatherMain.equals("Fog")) {
-            weatherMainTextView.setText("Hmmm... It's "+weatherMain+ " today");
-            weatherDescTextView.setText("It's " + weatherDesc + "\nYou can't see me");
-            weatherImageView.setImageResource(R.drawable.fog);
-        }else if(weatherMain.equals("Wind")) {
-            weatherMainTextView.setText("Wheeee! It's "+weatherMain+ " today");
-            weatherDescTextView.setText("It's " + weatherDesc + "\nWindy day ahead!");
-            weatherImageView.setImageResource(R.drawable.wind);
-        }else{
-            weatherMainTextView.setText("Hmm... It's "+weatherMain+ " today");
-            weatherDescTextView.setText("It's " + weatherDesc + "\nWeather can be change anytime, be prepare!!");
-            weatherImageView.setImageResource(R.drawable.weather);
+        String mainMessage;
+        String descMessage;
+        int imageResource;
+
+        switch (weatherMain) {
+            case "Thunderstorm":
+                mainMessage = "OH NO! It's " + weatherMain + " today";
+                descMessage = "It's " + weatherDesc + ", Please be prepared to get wet!!";
+                imageResource = R.drawable.thunderstorm;
+                break;
+            case "Rain":
+                mainMessage = "NOOOO! It's " + weatherMain + " today";
+                descMessage = "It's " + weatherDesc + ", Remember to bring umbrella";
+                imageResource = R.drawable.rainy;
+                break;
+            case "Snow":
+                mainMessage = "Hurray! It's " + weatherMain + " today";
+                descMessage = "It's " + weatherDesc + ", FREEZEEEEE!!";
+                imageResource = R.drawable.snow;
+                break;
+            case "Clear":
+                mainMessage = "WOAH! It's " + weatherMain + " today";
+                descMessage = "It's " + weatherDesc + ", What a great day for a picnic!";
+                imageResource = R.drawable.clear;
+                break;
+            case "Clouds":
+                mainMessage = "Yeah! It's " + weatherMain + " today";
+                descMessage = "It's " + weatherDesc + ", Ohh, it's picnic time!!";
+                imageResource = R.drawable.cloudy;
+                break;
+            case "Fog":
+                mainMessage = "Hmmm... It's " + weatherMain + " today";
+                descMessage = "It's " + weatherDesc + ", You can't see me";
+                imageResource = R.drawable.fog;
+                break;
+            case "Wind":
+                mainMessage = "Wheeee! It's " + weatherMain + " today";
+                descMessage = "It's " + weatherDesc + ", Windy day ahead!";
+                imageResource = R.drawable.wind;
+                break;
+            default:
+                mainMessage = "Hmm... It's " + weatherMain + " today";
+                descMessage = "It's " + weatherDesc + ", Weather can change anytime, be prepared!!";
+                imageResource = R.drawable.weather;
+                break;
         }
+
+        weatherMainTextView.setText(mainMessage);
+        weatherDescTextView.setText(descMessage);
+        weatherImageView.setImageResource(imageResource);
     }
+
 
     @Override
     public void onWeatherDataFailed() {

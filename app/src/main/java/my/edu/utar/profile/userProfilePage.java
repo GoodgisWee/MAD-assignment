@@ -1,5 +1,6 @@
 package my.edu.utar.profile;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -21,12 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import javax.xml.parsers.SAXParser;
-
-import my.edu.utar.BookingPage.BookingPage;
 import my.edu.utar.login.MainActivity;
 import my.edu.utar.R;
-import my.edu.utar.SQLiteAdapter;
+import my.edu.utar.Database.SQLiteAdapter;
 
 public class userProfilePage extends AppCompatActivity {
     private ImageView profilePictureImageView;
@@ -55,6 +53,7 @@ public class userProfilePage extends AppCompatActivity {
 
         // Initialize UI elements
         profilePictureImageView = findViewById(R.id.userImage);
+        profilePictureImageView.setImageResource(R.drawable.profile);
         nameTextView = findViewById(R.id.name);
         uidTextView = findViewById(R.id.userid);
         pointsTextView = findViewById(R.id.point);
@@ -116,6 +115,8 @@ public class userProfilePage extends AppCompatActivity {
             }
         });
 
+
+
         //change profile picture
         profilePictureImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +130,9 @@ public class userProfilePage extends AppCompatActivity {
         changePassTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(userProfilePage.this, changePasswordPage.class);
+                intent.putExtra("uid", uid);
+                startActivity(intent);
             }
         });
 
@@ -154,9 +157,26 @@ public class userProfilePage extends AppCompatActivity {
         logoutTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(userProfilePage.this, MainActivity.class);
-                startActivity(intent);
 
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(userProfilePage.this);
+                builder.setTitle("Confirm Logout");
+                builder.setMessage("Are you sure?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(userProfilePage.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Dismiss the dialog, do nothing
+                        dialog.dismiss();
+                    }
+                });
+                android.app.AlertDialog dialog = builder.create();
+                dialog.show();
                 finish();
             }
         });
@@ -172,6 +192,7 @@ public class userProfilePage extends AppCompatActivity {
                 Intent intent = new Intent(userProfilePage.this, my.edu.utar.BookingHistory.MyTicketActivity.class);
                 intent.putExtra("uid",uid);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -180,7 +201,8 @@ public class userProfilePage extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(userProfilePage.this, my.edu.utar.BookingPage.BookingPage.class);
                 intent.putExtra("uid",uid);
-                startActivity(intent);
+                startActivity(intent);finish();
+                finish();
             }
         });
 

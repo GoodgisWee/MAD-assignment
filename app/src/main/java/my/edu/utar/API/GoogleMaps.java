@@ -3,11 +3,8 @@ package my.edu.utar.API;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -28,14 +25,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import my.edu.utar.R;
-import my.edu.utar.SQLiteAdapter;
+import my.edu.utar.Database.SQLiteAdapter;
 
 public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
 
@@ -43,6 +36,7 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
     private SQLiteAdapter mySQliteAdapter;
     private ArrayList<String[]> busList, scheduleList;
     private ImageButton zoomOutButton;
+    private String uid, busID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +44,11 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
         setContentView(R.layout.activity_google_maps);
 
         mySQliteAdapter = new SQLiteAdapter(this);
+
+        //get value from last activity
+        Intent intent = getIntent();
+        uid = intent.getStringExtra("uid");
+        busID = intent.getStringExtra("busID");
 
         //zoom out function
         zoomOutButton = findViewById(R.id.zoomOutButton);
@@ -63,9 +62,6 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
                         .zoom(14) // Adjust the original zoom level as needed
                         .build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(originalCameraPosition));
-
-                // Hide the zoom out button again
-                zoomOutButton.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -111,8 +107,8 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
         //BUS LOCATION
         //read data from database
         mySQliteAdapter.openToRead();
-        busList = mySQliteAdapter.readBusByCondition("busID", "1001");
-        scheduleList = mySQliteAdapter.readScheduleByCondition("scheduleID", "1");
+        busList = mySQliteAdapter.readBusByCondition("busID", busID);
+        scheduleList = mySQliteAdapter.readScheduleByCondition("busID", busID);
 
         //store all value in proper variable
         String busCurrent="", busCurrentTime="", scheduleTime="";

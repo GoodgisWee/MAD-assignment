@@ -28,7 +28,7 @@ import com.google.android.gms.tasks.Task;
 
 import my.edu.utar.BookingPage.BookingPage;
 import my.edu.utar.R;
-import my.edu.utar.SQLiteAdapter;
+import my.edu.utar.Database.SQLiteAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("uid",uid);
                     intent.putExtra("login","login");
                     startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(MainActivity.this, "Invalid login details. Please ensure you key in the right details", Toast.LENGTH_SHORT).show();
                 }
