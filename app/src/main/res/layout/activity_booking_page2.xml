@@ -136,13 +136,6 @@
                     android:src="@drawable/ic_baseline_search_24" />
             </LinearLayout>
 
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ECECEC">
-
             <LinearLayout
                 android:layout_width="381dp"
                 android:layout_height="100dp"
@@ -187,6 +180,13 @@
                         android:textSize="14dp" />
                 </LinearLayout>
             </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ECECEC">
 
             <LinearLayout
                 android:layout_width="match_parent"

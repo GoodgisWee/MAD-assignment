@@ -392,6 +392,68 @@ public class SQLiteAdapter {
         return resultList;
     }
 
+    public ArrayList<String[]> readScheduleByTwoCondition(String condition, String conditionValue, String condition2, String conditionValue2) {
+        String[] columns = new String[]{"scheduleID", SCHEDULE_TIME_STARTING, SCHEDULE_TIME_ENDING, SCHEDULE_DATE, SCHEDULE_SEAT_AVAILABLE, "busID"};
+        //to locate the cursor
+        Cursor cursor = sqLiteDatabase.query(SCHEDULE_TABLE, columns,
+                condition + "=? AND "+ condition2 +"=?", new String[]{conditionValue, conditionValue2}, null, null,
+                SCHEDULE_TIME_STARTING + " ASC");
+
+        ArrayList<String[]> resultList = new ArrayList<>();
+
+        int index_CONTENT = cursor.getColumnIndex("scheduleID");
+        int index_CONTENT_1 = cursor.getColumnIndex(SCHEDULE_TIME_STARTING);
+        int index_CONTENT_2 = cursor.getColumnIndex(SCHEDULE_TIME_ENDING);
+        int index_CONTENT_3 = cursor.getColumnIndex(SCHEDULE_DATE);
+        int index_CONTENT_4 = cursor.getColumnIndex(SCHEDULE_SEAT_AVAILABLE);
+        int index_CONTENT_5 = cursor.getColumnIndex("busID");
+
+        //it will read all the data until finish
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+            String[] resultArray = new String[6];
+            resultArray[0] = cursor.getString(index_CONTENT);
+            resultArray[1] = cursor.getString(index_CONTENT_1);
+            resultArray[2] = cursor.getString(index_CONTENT_2);
+            resultArray[3] = cursor.getString(index_CONTENT_3);
+            resultArray[4] = cursor.getString(index_CONTENT_4);
+            resultArray[5] = cursor.getString(index_CONTENT_5);
+            resultList.add(resultArray);
+        }
+        cursor.close();
+        return resultList;
+    }
+
+    public ArrayList<String[]> readScheduleBySeat(String condition, int seat) {
+        String[] columns = new String[]{"scheduleID", SCHEDULE_TIME_STARTING, SCHEDULE_TIME_ENDING, SCHEDULE_DATE, SCHEDULE_SEAT_AVAILABLE, "busID"};
+        //to locate the cursor
+        Cursor cursor = sqLiteDatabase.query(SCHEDULE_TABLE, columns,
+                condition + "< "+seat, null, null, null,
+                SCHEDULE_TIME_STARTING + " ASC");
+
+        ArrayList<String[]> resultList = new ArrayList<>();
+
+        int index_CONTENT = cursor.getColumnIndex("scheduleID");
+        int index_CONTENT_1 = cursor.getColumnIndex(SCHEDULE_TIME_STARTING);
+        int index_CONTENT_2 = cursor.getColumnIndex(SCHEDULE_TIME_ENDING);
+        int index_CONTENT_3 = cursor.getColumnIndex(SCHEDULE_DATE);
+        int index_CONTENT_4 = cursor.getColumnIndex(SCHEDULE_SEAT_AVAILABLE);
+        int index_CONTENT_5 = cursor.getColumnIndex("busID");
+
+        //it will read all the data until finish
+        for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
+            String[] resultArray = new String[6];
+            resultArray[0] = cursor.getString(index_CONTENT);
+            resultArray[1] = cursor.getString(index_CONTENT_1);
+            resultArray[2] = cursor.getString(index_CONTENT_2);
+            resultArray[3] = cursor.getString(index_CONTENT_3);
+            resultArray[4] = cursor.getString(index_CONTENT_4);
+            resultArray[5] = cursor.getString(index_CONTENT_5);
+            resultList.add(resultArray);
+        }
+        cursor.close();
+        return resultList;
+    }
+
     public ArrayList<String[]> readBooking() {
         String[] columns = new String[]{"bookingID", BOOKING_DATE, BOOKING_PICKUP, BOOKING_DROPOFF, BOOKING_STATUS, "userID", "scheduleID", BOOKING_NAME};
         //to locate the cursor

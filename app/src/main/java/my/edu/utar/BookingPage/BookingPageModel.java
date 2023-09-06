@@ -121,7 +121,7 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
                     if (Time.valueOf(scheduleListByCondition.get(j)[1]).compareTo(Time.valueOf(timeStr)) > 0 &&
                             Integer.parseInt(scheduleListByCondition.get(j)[4]) > 0) {
                         busID = busList.get(i)[0];
-                        scheduleListByCondition = mySQLiteAdapter.readScheduleByCondition("busID", busID);
+                        scheduleListByCondition = mySQLiteAdapter.readScheduleByTwoCondition("busID", busID, "scheduleDate", dateStr);
                         noBus = false;
                         break;
                     }

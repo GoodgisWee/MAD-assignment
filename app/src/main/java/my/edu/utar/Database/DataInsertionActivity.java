@@ -20,14 +20,16 @@ import my.edu.utar.R;
 public class DataInsertionActivity extends AppCompatActivity {
 
     private SQLiteAdapter mySQLiteAdapter;
-    ArrayList<String[]> userList, busList, scheduleList, bookingList;
+    ArrayList<String[]> userList, busList, scheduleList, bookingList, scheduleListExist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mySQLiteAdapter = new SQLiteAdapter(this);
 
+
         try{
             mySQLiteAdapter.openToWrite();
+            mySQLiteAdapter.deleteAll();
 
             //if no user then enter data into it
 
@@ -53,24 +55,24 @@ public class DataInsertionActivity extends AppCompatActivity {
             if(busList.size()==0){
                 //bus to WestLake
                 mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block N", "WestLake", "10001");
-                mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block G", "WestLake", "10001");
-                mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block D", "WestLake", "10001");
                 mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "WestLake", "Block N", "10001");
+                mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block G", "WestLake", "10001");
                 mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "WestLake", "Block G", "10001");
+                mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "Block D", "WestLake", "10001");
                 mySQLiteAdapter.insertBusTable("BTW 123", "Block G", "13:00:00", "WestLake", "Block D", "10001");
                 //bus to Harvard
                 mySQLiteAdapter.insertBusTable("BTH 123", "Block N", "13:00:00", "Block N", "Harvard", "10002");
-                mySQLiteAdapter.insertBusTable("BTH 123", "Block N", "13:00:00", "Block G", "Harvard", "10002");
-                mySQLiteAdapter.insertBusTable("BTH 123", "Block N", "13:00:00", "Block D", "Harvard", "10002");
                 mySQLiteAdapter.insertBusTable("BTH 123", "Block N", "13:00:00", "Harvard", "Block N", "10002");
+                mySQLiteAdapter.insertBusTable("BTH 123", "Block N", "13:00:00", "Block G", "Harvard", "10002");
                 mySQLiteAdapter.insertBusTable("BTH 123", "Block N", "13:00:00", "Harvard", "Block G", "10002");
+                mySQLiteAdapter.insertBusTable("BTH 123", "Block N", "13:00:00", "Block D", "Harvard", "10002");
                 mySQLiteAdapter.insertBusTable("BTH 123", "Block N", "13:00:00", "Harvard", "Block D", "10002");
                 //bus to Stanford
                 mySQLiteAdapter.insertBusTable("BTS 123", "Block D", "13:00:00", "Block N", "Stanford", "10003");
-                mySQLiteAdapter.insertBusTable("BTS 123", "Block D", "13:00:00", "Block G", "Stanford", "10003");
-                mySQLiteAdapter.insertBusTable("BTS 123", "Block D", "13:00:00", "Block D", "Stanford", "10003");
                 mySQLiteAdapter.insertBusTable("BTS 123", "Block D", "13:00:00", "Stanford", "Block N", "10003");
+                mySQLiteAdapter.insertBusTable("BTS 123", "Block D", "13:00:00", "Block G", "Stanford", "10003");
                 mySQLiteAdapter.insertBusTable("BTS 123", "Block D", "13:00:00", "Stanford", "Block G", "10003");
+                mySQLiteAdapter.insertBusTable("BTS 123", "Block D", "13:00:00", "Block D", "Stanford", "10003");
                 mySQLiteAdapter.insertBusTable("BTS 123", "Block D", "13:00:00", "Stanford", "Block D", "10003");
             }
 
@@ -81,7 +83,15 @@ public class DataInsertionActivity extends AppCompatActivity {
             SimpleDateFormat dateStrFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
             dateStrFormat.setTimeZone(malaysiaTimeZone);
             String currentDateStr = dateStrFormat.format(calendar.getTime());
-
+            /*scheduleListExist= mySQLiteAdapter.readScheduleBySeat("seatAvailable", 30);
+            String[] dateExist = new String[scheduleList.size()];
+            String[] startTimeExist = new String[scheduleList.size()];
+            String[] busIdExist = new String[scheduleList.size()];
+            for(int i=0; i<scheduleList.size(); i++){
+                    dateExist[i]=scheduleList.get(i)[3];
+                startTimeExist[i]=scheduleList.get(i)[1];
+                busIdExist[i]=scheduleList.get(i)[5];
+            }*/
             mySQLiteAdapter.deleteScheduleByCondition(currentDateStr);
 
             //update for 5 days schedule
@@ -93,16 +103,19 @@ public class DataInsertionActivity extends AppCompatActivity {
                 }
                 Date date = calendar.getTime();
                 String dateStr = dateStrFormat.format(date);
-                //add new schedule
-                String startTime = "09:00:00";
-                for(int j=0; j<7; j++){ //7 period bus driver short rest for 20 minute
-                    for (int k = 0; k < 6; k++) { //6 bus drive each period
-                        mySQLiteAdapter.insertScheduleTable(startTime, addMinutesToTime(startTime, 30), dateStr, 30, 1001 + k);
-                        mySQLiteAdapter.insertScheduleTable(startTime, addMinutesToTime(startTime, 30), dateStr, 30, 1007 + k);
-                        mySQLiteAdapter.insertScheduleTable(startTime, addMinutesToTime(startTime, 30), dateStr, 30, 1013 + k);
-                        startTime = addMinutesToTime(startTime, 5); // Add 5 minutes to the start time
+                scheduleList= mySQLiteAdapter.readScheduleByCondition("scheduleDate", dateStr);
+                if(scheduleList.size()==0){
+                    //add new schedule
+                    String startTime = "09:00:00";
+                    for(int j=0; j<11; j++){ //7 period bus driver short rest for 20 minute
+                        for (int k = 0; k < 6; k++) { //6 bus drive each period
+                            mySQLiteAdapter.insertScheduleTable(startTime, addMinutesToTime(startTime, 30), dateStr, 30, 1001 + k);
+                            mySQLiteAdapter.insertScheduleTable(startTime, addMinutesToTime(startTime, 30), dateStr, 30, 1007 + k);
+                            mySQLiteAdapter.insertScheduleTable(startTime, addMinutesToTime(startTime, 30), dateStr, 30, 1013 + k);
+                            startTime = addMinutesToTime(startTime, 5);
+                        }
+                        startTime = addMinutesToTime(startTime, 20);
                     }
-                    startTime = addMinutesToTime(startTime, 20);
                 }
             }
 
@@ -112,7 +125,7 @@ public class DataInsertionActivity extends AppCompatActivity {
             bookingList = mySQLiteAdapter.readBooking();
             busList= mySQLiteAdapter.readBus();
             userList= mySQLiteAdapter.readUser();
-            scheduleList= mySQLiteAdapter.readSchedule();
+            scheduleList= mySQLiteAdapter.readScheduleByCondition("scheduleDate", currentDateStr);
             bookingList= mySQLiteAdapter.readBooking();
             if(bookingList.size()==0){
 

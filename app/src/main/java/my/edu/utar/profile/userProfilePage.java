@@ -164,8 +164,9 @@ public class userProfilePage extends AppCompatActivity {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(userProfilePage.this, MainActivity.class);
+                        Intent intent = new Intent(userProfilePage.this, my.edu.utar.login.MainActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
