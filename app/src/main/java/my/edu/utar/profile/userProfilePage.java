@@ -38,6 +38,7 @@ public class userProfilePage extends AppCompatActivity {
     private Button updateButton;
     private ArrayList<String[]> bus;
     private LinearLayout busLocationLayout;
+    private ImageButton whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,7 @@ public class userProfilePage extends AppCompatActivity {
         busLocation = findViewById(R.id.busLocation);
         updateButton = findViewById(R.id.updateButton);
         busLocationLayout = findViewById(R.id.busLocationLayout);
+        whatsapp = findViewById(R.id.whatsapp);
 
         mySQLiteAdapter.openToWrite();
         userListByCondition = mySQLiteAdapter.readUserByCondition("userID", uid);
@@ -137,7 +139,7 @@ public class userProfilePage extends AppCompatActivity {
         });
 
         //whatapps API
-        aboutTextView.setOnClickListener(new View.OnClickListener() {
+        whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //change to all ppl phone no

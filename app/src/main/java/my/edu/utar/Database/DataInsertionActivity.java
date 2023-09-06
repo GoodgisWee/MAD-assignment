@@ -29,7 +29,6 @@ public class DataInsertionActivity extends AppCompatActivity {
 
         try{
             mySQLiteAdapter.openToWrite();
-            mySQLiteAdapter.deleteAll();
 
             //if no user then enter data into it
 

@@ -33,6 +33,7 @@ import my.edu.utar.Database.SQLiteAdapter;
 
 public class BookingPage extends AppCompatActivity implements Weather.WeatherCallback {
 
+    //declare all variable
     private Spinner pickupSpinner, dropoffSpinner;
     private String pickUpPoint, dropOffPoint, dateStr, timeStr, paxStr, busID;
     private ArrayList<String[]> scheduleListByCondition, busList, busListByCondition;
@@ -53,12 +54,14 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking_page2);
 
+        //get curren user id
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
         if(intent.getStringExtra("uid").equals("login")){
             Toast.makeText(this, "Successfully Login !", Toast.LENGTH_SHORT).show();
         }
 
+        //get all view from xml
         pickupSpinner = findViewById(R.id.pickUp);
         dropoffSpinner = findViewById(R.id.dropOff);
         date = findViewById(R.id.textViewDate);
@@ -71,6 +74,7 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
         bookingBtn = findViewById(R.id.bookingBtn);
         profileBtn = findViewById(R.id.profileBtn);
 
+        //navigate user to my ticket page
         bookingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +86,7 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
             }
         });
 
+        //navigate user to profile page
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
