@@ -204,7 +204,7 @@ public class userProfilePage extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(userProfilePage.this, my.edu.utar.BookingPage.BookingPage.class);
                 intent.putExtra("uid",uid);
-                startActivity(intent);finish();
+                startActivity(intent);
                 finish();
             }
         });

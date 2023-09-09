@@ -58,7 +58,7 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
         String login = intent.getStringExtra("login");
-        if(uid!= null && login.equals("login")){
+        if(login!= null && login.equals("login")){
             Toast.makeText(this, "Successfully Login !", Toast.LENGTH_SHORT).show();
         }
 
@@ -81,7 +81,6 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
             public void onClick(View view) {
                 Intent intent = new Intent(BookingPage.this, my.edu.utar.BookingHistory.MyTicketActivity.class);
                 intent.putExtra("uid",uid);
-                intent.putExtra("busID",busID);
                 startActivity(intent);
                 finish();
             }
