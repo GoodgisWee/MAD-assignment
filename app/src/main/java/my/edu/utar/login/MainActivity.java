@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private  TextView signup;
     private Button loginButton;
     private String passwordStr, loginIDStr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

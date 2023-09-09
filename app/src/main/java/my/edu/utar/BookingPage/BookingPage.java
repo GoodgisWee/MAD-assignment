@@ -57,7 +57,8 @@ public class BookingPage extends AppCompatActivity implements Weather.WeatherCal
         //get curren user id
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
-        if(intent.getStringExtra("uid").equals("login")){
+        String login = intent.getStringExtra("login");
+        if(uid!= null && login.equals("login")){
             Toast.makeText(this, "Successfully Login !", Toast.LENGTH_SHORT).show();
         }
 

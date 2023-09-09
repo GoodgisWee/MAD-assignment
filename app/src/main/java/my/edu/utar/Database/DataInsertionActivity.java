@@ -31,7 +31,6 @@ public class DataInsertionActivity extends AppCompatActivity {
             mySQLiteAdapter.openToWrite();
 
             //if no user then enter data into it
-
             userList = mySQLiteAdapter.readUser();
             ;
             if(userList.size()==0){
