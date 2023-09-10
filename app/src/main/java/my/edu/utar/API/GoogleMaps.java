@@ -3,8 +3,12 @@ package my.edu.utar.API;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -14,6 +18,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,6 +30,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
@@ -37,6 +45,10 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
     private ArrayList<String[]> busList, scheduleList;
     private ImageButton zoomOutButton;
     private String uid, busID;
+    private FusedLocationProviderClient fusedLocationClient;
+    private static final int REQUEST_LOCATION_PERMISSION = 1;
+    private LatLng current;
+    private double latitude , longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +68,11 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
             @Override
             public void onClick(View v) {
                 // Animate the camera to the original position and zoom level
-                LatLng originalLocation = new LatLng(4.3085, 101.1537); //kampar
+                if(longitude==0&&latitude==0){
+                    current = new LatLng(4.3085, 101.1537); //kampar
+                }
                 CameraPosition originalCameraPosition = new CameraPosition.Builder()
-                        .target(originalLocation)
+                        .target(current)
                         .zoom(14) // Adjust the original zoom level as needed
                         .build();
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(originalCameraPosition));
@@ -75,10 +89,20 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.setOnMarkerClickListener(this);
 
-        //showing current location
-        // Define the target location
-        LatLng current = new LatLng(4.3085, 101.1537); //kampar
+        //-------------------------------------------
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        // Check for location permissions
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+        } else {
+            // Permission is already granted, proceed to get the location
+            getLocation();
+        }
+
+        //----------------------------------------
+        /*current = new LatLng(latitude, longitude);
         // Set the initial camera position
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(current)
@@ -86,7 +110,97 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
                 .build();
 
         // Move the camera to the initial position
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));*/
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        // Check if the clicked marker is the bus marker
+        if (marker.getTag() != null) {
+            // Animate the camera to the bus marker's position
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 18.0f)); // Adjust the zoom level as needed
+            return true; // Return true to indicate that the click event has been handled
+        }
+        return false; // Return false to indicate that the click event has not been handled
+    }
+
+    public class MyLocationListener implements LocationListener {
+        @Override
+        public void onLocationChanged(Location location) {
+            // Handle location updates here
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            // Do something with the latitude and longitude
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            // Handle status changes if needed
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            // Called when the user enables the location provider (e.g., GPS)
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            // Called when the user disables the location provider
+        }
+    }
+
+    // Request the user's location
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                // Use the location information (latitude and longitude)
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+
+                                current = new LatLng(latitude,longitude);
+                                updateMapWithLocation(current);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Handle failure to get location here
+                        }
+                    });
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed to get the location
+                getLocation();
+            } else {
+                current = new LatLng(4.3085, 101.1537); //kampar
+                updateMapWithLocation(current);
+                Toast.makeText(GoogleMaps.this, "Permission denied, showing estimated location ", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void updateMapWithLocation(LatLng currentLocation) {
+        // Add your code here to update the map with the user's location
+        // For example, you can move the camera to the user's location:
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(currentLocation)
+                .zoom(14) // You can adjust the zoom level
+                .build();
+
+        // Move the camera to the user's location
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         // Load the custom marker image as a Bitmap
         Bitmap currentBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.current_location);
@@ -119,27 +233,7 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
         } else {
             Toast.makeText(GoogleMaps.this, "Error empty bus list", Toast.LENGTH_SHORT).show();
         }
-        
-        /*//Get current date and time
-        Calendar calendar = Calendar.getInstance();
-        Date currentDate = calendar.getTime();
-        Date currentTime = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-        String formattedDate = dateFormat.format(currentDate);
-        String formattedTime = dateFormat.format(currentTime);
 
-        Date targetDate;
-        boolean future = false;
-        try {
-            targetDate = dateFormat.parse(busCurrentTime);
-            int comparisonResult = dateFormat.parse(formattedDate).compareTo(targetDate);
-            if (comparisonResult >= 0) {
-                future = true;
-            }
-        } catch (ParseException e) {
-            System.err.println("Error parsing the target date: " + e.getMessage());
-        }*/
         //Get bus location and display
         if(busList.size()!=0){
             LatLng location;
@@ -176,41 +270,4 @@ public class GoogleMaps extends AppCompatActivity implements OnMapReadyCallback,
         }
 
     }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        // Check if the clicked marker is the bus marker
-        if (marker.getTag() != null) {
-            // Animate the camera to the bus marker's position
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 18.0f)); // Adjust the zoom level as needed
-            return true; // Return true to indicate that the click event has been handled
-        }
-        return false; // Return false to indicate that the click event has not been handled
-    }
-
-    public class MyLocationListener implements LocationListener {
-        @Override
-        public void onLocationChanged(Location location) {
-            // Handle location updates here
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-            // Do something with the latitude and longitude
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            // Handle status changes if needed
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            // Called when the user enables the location provider (e.g., GPS)
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            // Called when the user disables the location provider
-        }
-    }
-
 }

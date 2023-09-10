@@ -3,6 +3,7 @@
     package="my.edu.utar">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -49,7 +50,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false"
+            android:parentActivityName="my.edu.utar.login.MainActivity">
+            <intent-filter>
+                <action android:name="com.google.android.gms.auth.GOOGLE_SIGN_IN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
+        <!--google maps API key-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDX1vpW2EKvwBwLIMKphuiFoDdQmdCRAxg" />

@@ -19,7 +19,7 @@ public class SQLiteAdapter {
     public static final String BOOKING_TABLE = "BOOKING_TABLE";
     public static final String BUS_TABLE = "BUS_TABLE";
     public static final String SCHEDULE_TABLE = "SCHEDULE_TABLE";
-    public static final int MYDATABASE_VERSION = 11;
+    public static final int MYDATABASE_VERSION = 12;
 
     //User table content
     public static final String USER_NAME = "userName";
@@ -27,6 +27,7 @@ public class SQLiteAdapter {
     public static final String USER_PASSWORD = "userPassword";
     public static final String USER_POINT = "userPoint";
     public static final String USER_CATEGORY = "userCategory";
+    public static final String USER_STATUS = "userStatus";
 
     //bus table content
     public static final String BUS_PLATE_NO = "busPlateNo";
@@ -58,7 +59,8 @@ public class SQLiteAdapter {
                     + USER_EMAIL + " text not null, "
                     + USER_PASSWORD + " text not null, "
                     + USER_POINT + " INTEGER not null, "
-                    + USER_CATEGORY + " text not null);";
+                    + USER_CATEGORY + " text not null, "
+                    + USER_STATUS + " text not null);";
 
     private static final String SCRIPT_CREATE_BUS_TABLE =
             "create table if not exists " + BUS_TABLE
@@ -128,7 +130,7 @@ public class SQLiteAdapter {
 
     //----------------------------------------------------------------------------------
     //INSERT INTO TABLE
-    public long insertUserTable(String content1, String content2, String content3, int content4, String content5) {
+    public long insertUserTable(String content1, String content2, String content3, int content4, String content5, String content6) {
         ContentValues contentValues = new ContentValues();
         //to write the content to the column of KEY_CONTENT
         contentValues.put(USER_NAME, content1);
@@ -136,6 +138,7 @@ public class SQLiteAdapter {
         contentValues.put(USER_PASSWORD, content3);
         contentValues.put(USER_POINT, content4);
         contentValues.put(USER_CATEGORY, content5);
+        contentValues.put(USER_STATUS, content6);
 
         return sqLiteDatabase.insert(USER_TABLE, null, contentValues);
     }
@@ -192,7 +195,7 @@ public class SQLiteAdapter {
     //------------------------------------------------------------------------------------------------
     //READ DATA
     public ArrayList<String[]> readUser() {
-        String[] columns = new String[]{"userID", USER_NAME, USER_EMAIL, USER_PASSWORD, USER_POINT, USER_CATEGORY};
+        String[] columns = new String[]{"userID", USER_NAME, USER_EMAIL, USER_PASSWORD, USER_POINT, USER_CATEGORY, USER_STATUS};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(USER_TABLE, columns,
                 null, null, null, null, null);
@@ -205,18 +208,20 @@ public class SQLiteAdapter {
         int index_CONTENT_3 = cursor.getColumnIndex(USER_PASSWORD);
         int index_CONTENT_4 = cursor.getColumnIndex(USER_POINT);
         int index_CONTENT_5 = cursor.getColumnIndex(USER_CATEGORY);
+        int index_CONTENT_6 = cursor.getColumnIndex(USER_STATUS);
 
         int count = 0;
         //it will read all the data until finish
         for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
             if (count > 0) {
-                String[] resultArray = new String[6];
+                String[] resultArray = new String[7];
                 resultArray[0] = cursor.getString(index_CONTENT);
                 resultArray[1] = cursor.getString(index_CONTENT_1);
                 resultArray[2] = cursor.getString(index_CONTENT_2);
                 resultArray[3] = cursor.getString(index_CONTENT_3);
                 resultArray[4] = cursor.getString(index_CONTENT_4);
                 resultArray[5] = cursor.getString(index_CONTENT_5);
+                resultArray[6] = cursor.getString(index_CONTENT_6);
                 resultList.add(resultArray);
             }
             count++;
@@ -226,7 +231,7 @@ public class SQLiteAdapter {
     }
 
     public ArrayList<String[]> readUserByCondition(String condition, String conditionValue) {
-        String[] columns = new String[]{"userID", USER_NAME, USER_EMAIL, USER_PASSWORD, USER_POINT, USER_CATEGORY};
+        String[] columns = new String[]{"userID", USER_NAME, USER_EMAIL, USER_PASSWORD, USER_POINT, USER_CATEGORY, USER_STATUS};
         //to locate the cursor
         Cursor cursor = sqLiteDatabase.query(USER_TABLE, columns,
                 condition + "=?", new String[]{conditionValue}, null, null,
@@ -240,16 +245,18 @@ public class SQLiteAdapter {
         int index_CONTENT_3 = cursor.getColumnIndex(USER_PASSWORD);
         int index_CONTENT_4 = cursor.getColumnIndex(USER_POINT);
         int index_CONTENT_5 = cursor.getColumnIndex(USER_CATEGORY);
+        int index_CONTENT_6 = cursor.getColumnIndex(USER_STATUS);
 
         //it will read all the data until finish
         for (cursor.moveToFirst(); !(cursor.isAfterLast()); cursor.moveToNext()) {
-            String[] resultArray = new String[6];
+            String[] resultArray = new String[7];
             resultArray[0] = cursor.getString(index_CONTENT);
             resultArray[1] = cursor.getString(index_CONTENT_1);
             resultArray[2] = cursor.getString(index_CONTENT_2);
             resultArray[3] = cursor.getString(index_CONTENT_3);
             resultArray[4] = cursor.getString(index_CONTENT_4);
             resultArray[5] = cursor.getString(index_CONTENT_5);
+            resultArray[6] = cursor.getString(index_CONTENT_6);
             resultList.add(resultArray);
 
         }
@@ -586,7 +593,7 @@ public class SQLiteAdapter {
         values.put(USER_PASSWORD, newPassword);
 
         // Define the WHERE clause to identify the row to update (assuming "ticket_id" is the primary key)
-        String whereClause = "oldPassword=?";
+        String whereClause = "userPassword=?";
         String[] whereArgs = {oldPassword};
 
         // Perform the update operation
@@ -638,6 +645,21 @@ public class SQLiteAdapter {
         // Perform the update operation
         int rowsAffected = db.update(USER_TABLE, values, whereClause, whereArgs);
         return rowsAffected > 0;
+    }
+
+    public boolean updateUserStatus(String userID, String userStatus) {
+        SQLiteDatabase db = this.sqLiteHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(USER_STATUS, userStatus);
+
+        // Define the WHERE clause to identify the row to update (assuming "ticket_id" is the primary key)
+        String whereClause = "userID=?";
+        String[] whereArgs = {userID};
+
+        // Perform the update operation
+        int rowsAffected = db.update(USER_TABLE, values, whereClause, whereArgs);
+        return rowsAffected >0;
     }
 
     public boolean updateBusLocation(String busID, String editedBusLocation) {
@@ -738,7 +760,6 @@ public class SQLiteAdapter {
             db.execSQL(SCRIPT_CREATE_BOOKING_TABLE);
 
             //make all table PK starting from desired value
-            /*initializeTableSequence();*/
         }
 
         @Override
@@ -748,7 +769,7 @@ public class SQLiteAdapter {
             db.execSQL(SCRIPT_CREATE_SCHEDULE_TABLE);
             db.execSQL(SCRIPT_CREATE_BOOKING_TABLE);
 
-            if (oldVersion < 11) {
+            if (oldVersion < 12) {
                 db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
                 db.execSQL("DROP TABLE IF EXISTS " + BUS_TABLE);
                 db.execSQL("DROP TABLE IF EXISTS " + SCHEDULE_TABLE);
@@ -758,7 +779,6 @@ public class SQLiteAdapter {
                 db.execSQL(SCRIPT_CREATE_SCHEDULE_TABLE);
                 db.execSQL(SCRIPT_CREATE_BOOKING_TABLE);
 
-                 /*initializeTableSequence();*/
             }
         }
     }
@@ -771,6 +791,7 @@ public class SQLiteAdapter {
         values.put(USER_PASSWORD, "DummyUser");
         values.put(USER_POINT, 100);
         values.put(USER_CATEGORY, "student");
+        values.put(USER_STATUS, "offline");
         sqLiteDatabase.insert(USER_TABLE, null, values);
         values.clear();
 

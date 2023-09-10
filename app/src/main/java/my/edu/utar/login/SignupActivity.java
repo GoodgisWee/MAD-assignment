@@ -94,7 +94,7 @@ public class SignupActivity extends AppCompatActivity {
         } else {
             mySQLiteAdapter.close();
             mySQLiteAdapter.openToWrite();
-            long result = mySQLiteAdapter.insertUserTable(name, email, password, 0, "Member");
+            long result = mySQLiteAdapter.insertUserTable(name, email, password, 0, "user", "offline");
             mySQLiteAdapter.close();
             if (result > 0) {
                 // Registration successful

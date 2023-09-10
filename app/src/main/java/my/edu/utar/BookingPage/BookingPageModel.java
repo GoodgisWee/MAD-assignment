@@ -2,10 +2,12 @@ package my.edu.utar.BookingPage;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -207,22 +210,8 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
                             Toast.makeText(BookingPageModel.this, "Booking successful! Now redirecting you to booking page....",
                                     Toast.LENGTH_SHORT).show();
 
-                            Intent intent = new Intent(getApplicationContext(), my.edu.utar.SplashScreenActivity.class);
+                            showNotification();
 
-                            // Create a PendingIntent to wrap the intent
-                            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                            // Build the notification with the PendingIntent
-                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
-                                    .setSmallIcon(R.drawable.logo)
-                                    .setContentTitle("Notification from Bus.IO")
-                                    .setContentText("Your booking has been done!")
-                                    .setContentIntent(pendingIntent) // Set the PendingIntent here
-                                    .setAutoCancel(true); // This makes the notification dismiss when clicked
-
-                            // Notify using the NotificationManager
-                            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                            notificationManager.notify(0, mBuilder.build());
 
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -305,4 +294,38 @@ public class BookingPageModel extends AppCompatActivity implements ScheduleAdapt
             return inputDateStr; // Return the original string if there's an error
         }
     }
+
+    private void showNotification() {
+        // Create an intent that opens your app when the user taps the notification
+        Intent intent = new Intent(this, my.edu.utar.SplashScreenActivity.class); // Replace YourMainActivity with your actual main activity
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        //set channel id
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "channel_id",                // Unique ID for the channel
+                    "Channel Name",              // Display name of the channel
+                    NotificationManager.IMPORTANCE_DEFAULT // Importance level
+            );
+            channel.setDescription("Channel Description"); // Optional description
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        // Build the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "channel_id") // Replace "channel_id" with your channel ID
+                .setSmallIcon(R.drawable.logo) // Replace with your notification icon
+                .setContentTitle("Notification from Bus.IO")
+                .setContentText("Your booking has been done!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent) // Set the PendingIntent here
+                .setAutoCancel(true);
+
+        // Show the notification
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(1, builder.build()); // You can use a unique ID (1 in this example) to update or cancel the notification later
+    }
+
 }

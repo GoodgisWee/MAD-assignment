@@ -3,6 +3,7 @@ package my.edu.utar.profile;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,6 +21,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import my.edu.utar.login.MainActivity;
@@ -36,6 +40,7 @@ public class userProfilePage extends AppCompatActivity {
     private ArrayList<String[]> userListByCondition;
     private Spinner busLocation;
     private Button updateButton;
+    private String uid;
     private ArrayList<String[]> bus;
     private LinearLayout busLocationLayout;
     private ImageButton whatsapp;
@@ -46,7 +51,7 @@ public class userProfilePage extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
 
         Intent intent = getIntent();
-        String uid = intent.getStringExtra("uid");
+        uid = intent.getStringExtra("uid");
 
         //database initialization
         mySQLiteAdapter = new SQLiteAdapter(this);
@@ -54,7 +59,22 @@ public class userProfilePage extends AppCompatActivity {
 
         // Initialize UI elements
         profilePictureImageView = findViewById(R.id.userImage);
-        profilePictureImageView.setImageResource(R.drawable.profile);
+        try {
+            String imagePath = "/data/user/0/my.edu.utar/files/" + uid + "_profile_image.png";
+            File imageFile = new File(imagePath);
+
+            if (imageFile.exists()) {
+                // If the image file exists, set the image using its URI
+                profilePictureImageView.setImageURI(Uri.parse(imagePath));
+            } else {
+                // If the image file doesn't exist, set the default profile image
+                profilePictureImageView.setImageResource(R.drawable.profile);
+            }
+        } catch (Exception e) {
+            // Handle any exceptions that may occur
+            e.printStackTrace();
+            profilePictureImageView.setImageResource(R.drawable.profile);
+        }
         nameTextView = findViewById(R.id.name);
         uidTextView = findViewById(R.id.userid);
         pointsTextView = findViewById(R.id.point);
@@ -167,6 +187,7 @@ public class userProfilePage extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(userProfilePage.this, my.edu.utar.login.MainActivity.class);
+                        mySQLiteAdapter.updateUserStatus(uid, "offline");
                         startActivity(intent);
                         finish();
                     }
@@ -180,7 +201,6 @@ public class userProfilePage extends AppCompatActivity {
                 });
                 android.app.AlertDialog dialog = builder.create();
                 dialog.show();
-                finish();
             }
         });
 
@@ -211,6 +231,7 @@ public class userProfilePage extends AppCompatActivity {
 
     }
 
+    //change user profile picture
     private void showImageChoiceDialog() {
         CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
 
@@ -239,12 +260,70 @@ public class userProfilePage extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
             profilePictureImageView.setImageURI(selectedImageUri);
+
+            // Save the image to a file
+            Bitmap imageBitmap = getBitmapFromUri(selectedImageUri);
+            saveImageToFile(imageBitmap);
         } else if (requestCode == REQUEST_CODE_CAPTURE_IMAGE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             profilePictureImageView.setImageBitmap(imageBitmap);
+
+            // Save the image to a file
+            saveImageToFile(imageBitmap);
         }
     }
 
+    // Helper method to get a Bitmap from a URI
+    private Bitmap getBitmapFromUri(Uri uri) {
+        try {
+            return MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Helper method to save a Bitmap to a file
+    private void saveImageToFile(Bitmap bitmap) {
+        File imageFile = new File(getFilesDir(), uid+"_profile_image.png"); // Change the filename and location as needed
+
+        try {
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+
+            // Now, you can update the user's profile with the imageFile.getAbsolutePath()
+            // You'll use this path to load the image as a drawable when needed.
+            String imagePath = imageFile.getAbsolutePath();
+            updateProfileWithImagePath(imagePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Example method to update the user's profile with the image path
+    private void updateProfileWithImagePath(String imagePath) {
+        // Create a Drawable from the image path
+        Drawable drawable = Drawable.createFromPath(imagePath);
+
+        // Check if drawable is not null (i.e., the image was successfully loaded)
+        if (drawable != null) {
+            // Set the drawable as the profile picture in an ImageView
+            profilePictureImageView.setImageURI(Uri.parse(imagePath));
+            // Optionally, you can store the imagePath in your preferences or database for future use.
+            // For example, you might want to save it to persistently associate it with the user's profile.
+            // SharedPreferences preferences = getSharedPreferences("MyPreferences", MODE_PRIVATE);
+            // SharedPreferences.Editor editor = preferences.edit();
+            // editor.putString("user_profile_image_path", imagePath);
+            // editor.apply();
+        } else {
+            // Handle the case where the drawable could not be created from the image path.
+            // You might want to show a default profile picture or an error message.
+            Toast.makeText(userProfilePage.this, "Error when updating the photo.", Toast.LENGTH_SHORT).show();
+            profilePictureImageView.setImageResource(R.drawable.profile);
+        }
+    }
 
 }

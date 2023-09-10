@@ -7,6 +7,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,12 +34,15 @@ import my.edu.utar.Database.SQLiteAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private SQLiteAdapter mySQLiteAdapter;
+    private GoogleSignInClient mGoogleSignInClient;
     //create a status code (can be any unique integer)
     private static final int RC_SIGN_IN = 123;
     private EditText loginID, password;
     private  TextView signup;
     private Button loginButton;
     private String passwordStr, loginIDStr;
+    private ArrayList<String[]> userList;
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mySQLiteAdapter = new SQLiteAdapter(this);
+        mySQLiteAdapter.openToWrite();
+        Toast.makeText(this, "Data updated successfully", Toast.LENGTH_SHORT).show();
+
 //-----------------------------------------------------------------------------------------------------
         //GOOGLE LOGIN
         //Implementing Google Sign in logic
@@ -91,10 +98,8 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<String[]> userList = new ArrayList<String[]>();
                 loginIDStr = loginID.getText().toString();
                 passwordStr = password.getText().toString();
-                mySQLiteAdapter.openToWrite();
                 if(passwordStr==null||passwordStr.equals("")){
                     Toast.makeText(MainActivity.this, "Error! Empty Password", Toast.LENGTH_SHORT).show();
                 } else {
@@ -109,9 +114,11 @@ public class MainActivity extends AppCompatActivity {
 
                 if(userList.size() > 0){
                     Intent intent = new Intent(MainActivity.this, BookingPage.class);
-                    String uid = userList.get(0)[0];
+                    uid = userList.get(0)[0];
+                    mySQLiteAdapter.updateUserStatus(uid, "online");
                     intent.putExtra("uid",uid);
                     intent.putExtra("login","login");
+                    mySQLiteAdapter.close();
                     startActivity(intent);
                     finish();
                 } else {
@@ -145,9 +152,32 @@ public class MainActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            // You've successfully signed in. You can use account.getIdToken() to get the ID token.
+            if (account != null) {
+                // Sign-in was successful. You can use account.getIdToken() to get the ID token.
+                // Now, you can start the next activity or perform any other necessary actions.
+
+                // For example, you can start a new activity like this:
+                Intent intent = new Intent(MainActivity.this, my.edu.utar.BookingPage.BookingPage.class);
+                String displayName = account.getDisplayName();
+                String email = account.getEmail();
+                userList = mySQLiteAdapter.readUserByCondition("userName", displayName);
+                if(userList.size()>0){
+                    userList = mySQLiteAdapter.readUserByCondition("userName", loginIDStr);
+                } else {
+                    mySQLiteAdapter.insertUserTable(displayName, email, "root123", 100, "student", "online");
+                    userList = mySQLiteAdapter.readUserByCondition("userName", displayName);
+                }
+                mySQLiteAdapter.close();
+                uid = userList.get(0)[0];
+                intent.putExtra("uid", uid);
+                intent.putExtra("login", "login");
+                startActivity(intent);
+            }
         } catch (ApiException e) {
             // Sign-in failed. Handle the error.
+            Log.e("#####DEBUG######", "Google Sign-In Failed: " + e.getMessage());
+            Toast.makeText(this, "Google Sign-In Failed", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

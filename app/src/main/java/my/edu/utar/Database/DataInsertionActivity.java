@@ -29,20 +29,20 @@ public class DataInsertionActivity extends AppCompatActivity {
 
         try{
             mySQLiteAdapter.openToWrite();
-
+            //mySQLiteAdapter.deleteAll();
             //if no user then enter data into it
             userList = mySQLiteAdapter.readUser();
-            ;
+
             if(userList.size()==0){
+                mySQLiteAdapter.initializeTableSequence();
+                mySQLiteAdapter.insertUserTable("Goodgis123", "wee123@gmail.com", "goodgis123", 100, "driver", "offline");
+                mySQLiteAdapter.insertUserTable("Kuanchee123", "kuanchee123@gmail.com", "kuanchee123", 100, "driver", "offline");
+                mySQLiteAdapter.insertUserTable("Jielun123", "jielun123@gmail.com", "jielun123", 100, "driver", "offline");
 
-                mySQLiteAdapter.insertUserTable("Goodgis123", "wee123@gmail.com", "goodgis123", 100, "driver");
-                mySQLiteAdapter.insertUserTable("Kuanchee123", "kuanchee123@gmail.com", "kuanchee123", 100, "driver");
-                mySQLiteAdapter.insertUserTable("Jielun123", "jielun123@gmail.com", "jielun123", 100, "driver");
-
-                mySQLiteAdapter.insertUserTable("Ryan123", "ryan123@gmail.com", "ryan123", 100, "student");
-                mySQLiteAdapter.insertUserTable("Nicholas123", "nicholas123@gmail.com", "nicholas123", 100, "student");
-                mySQLiteAdapter.insertUserTable("Wee123", "wee123@gmail.com", "wee123", 100, "student");
-                mySQLiteAdapter.insertUserTable("Ahmad123", "ahmad123@gmail.com", "ahmad123", 100, "student");
+                mySQLiteAdapter.insertUserTable("Ryan123", "ryan123@gmail.com", "ryan123", 100, "user", "offline");
+                mySQLiteAdapter.insertUserTable("Nicholas123", "nicholas123@gmail.com", "nicholas123", 100, "user", "offline");
+                mySQLiteAdapter.insertUserTable("Wee123", "wee123@gmail.com", "wee123", 100, "user", "offline");
+                mySQLiteAdapter.insertUserTable("Ahmad123", "ahmad123@gmail.com", "ahmad123", 100, "user", "offline");
             }
 
 
@@ -119,12 +119,6 @@ public class DataInsertionActivity extends AppCompatActivity {
 
             //------------------INSERT BOOKING TABLE-------------------------
             //if no booking then insert booking record
-
-            bookingList = mySQLiteAdapter.readBooking();
-            busList= mySQLiteAdapter.readBus();
-            userList= mySQLiteAdapter.readUser();
-            scheduleList= mySQLiteAdapter.readScheduleByCondition("scheduleDate", currentDateStr);
-            bookingList= mySQLiteAdapter.readBooking();
             if(bookingList.size()==0){
 
                 mySQLiteAdapter.insertBookingTable("2022-07-17", "Harvard", "Block G", "past", 10004, 22, "Young Lai Sien");
@@ -139,12 +133,30 @@ public class DataInsertionActivity extends AppCompatActivity {
         } catch(Exception e){
             e.printStackTrace();
         } finally {
-
-            Toast.makeText(this, "Data updated successfully", Toast.LENGTH_SHORT).show();
             mySQLiteAdapter.close();
-            Intent intent = new Intent(DataInsertionActivity.this, my.edu.utar.login.MainActivity.class);
-            startActivity(intent);
-            finish();
+            boolean userLoginAlready = false;
+            String uid = "";
+            if(userList != null && userList.size() > 0){
+                for(int i=0; i<userList.size(); i++){
+                    if(userList.get(i)[6].equals("online")){
+                        userLoginAlready = true;
+                        uid = userList.get(i)[0];
+                        break;
+                    }
+                }
+            }
+
+            if(userLoginAlready == true){
+                Intent intent = new Intent(DataInsertionActivity.this, my.edu.utar.BookingPage.BookingPage.class);
+                intent.putExtra("uid", uid);
+                startActivity(intent);
+                finish();
+            } else {
+                Intent intent = new Intent(DataInsertionActivity.this, my.edu.utar.login.MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
         }
         //------------------INSERT USER TABLE-------------------------
 
