@@ -1,7 +1,10 @@
 package my.edu.utar.login;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -94,7 +97,7 @@ public class SignupActivity extends AppCompatActivity {
         } else {
             mySQLiteAdapter.close();
             mySQLiteAdapter.openToWrite();
-            long result = mySQLiteAdapter.insertUserTable(name, email, password, 0, "user", "offline");
+            long result = mySQLiteAdapter.insertUserTable(name, email, password, 100, "user", "offline");
             mySQLiteAdapter.close();
             if (result > 0) {
                 // Registration successful
@@ -104,7 +107,7 @@ public class SignupActivity extends AppCompatActivity {
                 Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                /*Intent it = new Intent(getApplicationContext(), my.edu.utar.SplashScreenActivity.class);
+                Intent it = new Intent(getApplicationContext(), my.edu.utar.SplashScreenActivity.class);
 
                 // Create a PendingIntent to wrap the intent
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -122,7 +125,7 @@ public class SignupActivity extends AppCompatActivity {
                 NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.notify(0, mBuilder.build());
                 startActivity(it);
-                finish();*/
+                finish();
             } else {
                 // Registration failed, handle the error
                 // Display an error message or toast

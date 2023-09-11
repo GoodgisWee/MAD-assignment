@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                if(userList.size() > 0){
+                if(userList!=null && userList.size() > 0){
                     Intent intent = new Intent(MainActivity.this, BookingPage.class);
                     uid = userList.get(0)[0];
                     mySQLiteAdapter.updateUserStatus(uid, "online");
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                 String email = account.getEmail();
                 userList = mySQLiteAdapter.readUserByCondition("userName", displayName);
                 if(userList.size()>0){
-                    userList = mySQLiteAdapter.readUserByCondition("userName", loginIDStr);
+                    //userList = mySQLiteAdapter.readUserByCondition("userName", displayName);
                 } else {
                     mySQLiteAdapter.insertUserTable(displayName, email, "root123", 100, "student", "online");
                     userList = mySQLiteAdapter.readUserByCondition("userName", displayName);

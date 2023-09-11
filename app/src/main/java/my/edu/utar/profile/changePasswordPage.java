@@ -46,9 +46,10 @@ public class changePasswordPage extends AppCompatActivity {
                 boolean result = db.updatePassword(oldPassword,newPassword);
                 if (result) {
                     Toast.makeText(this, "Password changed successfully!", Toast.LENGTH_SHORT).show();
-
-/*                    // Show the "Go to Profile" button
-                    goToProfileButton.setVisibility(View.VISIBLE);*/
+                    Intent intent2 = new Intent(changePasswordPage.this, userProfilePage.class);
+                    intent2.putExtra("uid", uid);
+                    startActivity(intent2);
+                    finish();
                 } else {
                     Toast.makeText(this, "Error: Old password may be incorrect.", Toast.LENGTH_SHORT).show();
                 }
